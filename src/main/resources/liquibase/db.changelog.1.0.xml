@@ -1,0 +1,524 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_function" value="uid.uuid_generate_v4()" dbms="postgresql"/>
+
+
+    <changeSet id="1.0.0" author="goldsilver12">
+        <createTable tableName="user">
+            <column name="id" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="user_name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="role_id" type="BIGINT" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(25)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="social_category" type="VARCHAR(50)" >
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <createTable tableName="role">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+            <addForeignKeyConstraint baseColumnNames="role_id"
+                                     baseTableName="user"
+                                     constraintName="fk_user_role"
+                                     onDelete="CASCADE"
+                                     onUpdate="RESTRICT"
+                                     referencedColumnNames="id"
+                                     referencedTableName="role"/>
+    </changeSet>
+
+
+    <changeSet id="1.0.3" author="goldsilver12">
+        <createTable tableName="location">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="double precision">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="double precision">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="customer">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="location_id" type="BIGINT" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="customer"
+                                 constraintName="fk_user_customer"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="location_id"
+                                 baseTableName="customer"
+                                 constraintName="fk_location_customer"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="location"/>
+
+        <createTable tableName="notification">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="message" type="VARCHAR(255)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="customer_id" type="BIGINT" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+            <addForeignKeyConstraint baseColumnNames="customer_id"
+                                     baseTableName="notification"
+                                     constraintName="fk_customer_notification"
+                                     onDelete="CASCADE"
+                                     onUpdate="RESTRICT"
+                                     referencedColumnNames="id"
+                                     referencedTableName="customer"/>
+
+        <createTable tableName="organization">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="volunteering_type" type="VARCHAR(25)" defaultValue="ACTIVE">
+            </column>
+            <column name="location_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organization_admin" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="location_id"
+                                 baseTableName="organization"
+                                 constraintName="fk_location_organization"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="location"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_admin"
+                                 baseTableName="organization"
+                                 constraintName="fk_user_organization"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+
+        <createTable tableName="event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="end_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+            <column name="start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="location_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="organization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="location_id"
+                                 baseTableName="event"
+                                 constraintName="fk_location_event"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="location"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="event"
+                                 constraintName="fk_event_organization"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+    </changeSet>
+
+    <changeSet id="1.0.4" author="goldsilver12">
+      <createTable tableName="product">
+          <column name="id" type="BIGINT" autoIncrement="true">
+              <constraints primaryKey="true" nullable="false"/>
+          </column>
+          <column name="created" type="TIMESTAMP" defaultValue="now()">
+              <constraints nullable="false"/>
+          </column>
+
+          <column name="updated" type="TIMESTAMP" defaultValue="now()">
+              <constraints nullable="false"/>
+          </column>
+
+          <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+              <constraints nullable="false"/>
+          </column>
+          <column name="amount" type="INTEGER">
+              <constraints nullable="true"/>
+          </column>
+          <column name="name" type="varchar(255)">
+              <constraints nullable="false"/>
+          </column>
+          <column name="description" type="VARCHAR(255)">
+              <constraints nullable="true"/>
+          </column>
+          <column name="image" type="VARCHAR(255)">
+              <constraints nullable="true"/>
+          </column>
+          <column name="event_id" type="BIGINT">
+              <constraints nullable="false"/>
+          </column>
+          <column name="organization_id" type="BIGINT">
+              <constraints nullable="false"/>
+          </column>
+      </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="product"
+                                 constraintName="fk_product_event"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="event"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="product"
+                                 constraintName="fk_product_organization"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+        
+        <createTable tableName="feedback">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="comment" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="feedback"
+                                 constraintName="fk_feedback_customer"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="feedback"
+                                 constraintName="fk_feedback_organization"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+
+        <createTable tableName="volunteer">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="volunteer"
+                                 constraintName="fk_user_volunteer"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+
+        <createTable tableName="organization_volunteer">
+            <column name="volunteer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="organization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="volunteer_id"
+                                 baseTableName="organization_volunteer"
+                                 constraintName="fk_organization_volunteer"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="volunteer"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="organization_volunteer"
+                                 constraintName="fk_volunteer_organization"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+    </changeSet>
+
+    <changeSet id="1.0.5" author="goldsilver12">
+        <createTable tableName="request">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amount" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confirmation_code" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+            </column>
+
+            <column name="queue_number" type="INT">
+            </column>
+            <column name="receiving_address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_status" type="VARCHAR(255)">
+            </column>
+            <column name="title" type="VARCHAR(255)">
+            </column>
+            <column name="volunteering_type" type="VARCHAR(255)">
+            </column>
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="request"
+                                 constraintName="fk_customer_request"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="request"
+                                 constraintName="fk_organization_request"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+
+        <createTable tableName="subscription">
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="organization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="subscription"
+                                 constraintName="fk_customer_subscription"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="subscription"
+                                 constraintName="fk_organization_subscription"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+    </changeSet>
+
+
+    
+    
+
+    <changeSet id="1.0.6" author="goldsilver12">
+        <insert tableName="role">
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+        <insert tableName="role">
+            <column name="name" value="ROLE_CUSTOMER"/>
+        </insert>
+        <insert tableName="role">
+            <column name="name" value="ROLE_ORGANIZATION_ADMIN"/>
+        </insert>
+        <insert tableName="role">
+            <column name="name" value="ROLE_VOLUNTEER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.7" author="goldsilver12">
+        <insert tableName="user">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130003"/>
+            <column name="user_name" value="goldsilverTest1"/>
+            <column name="email" value="test@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="1"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+
+        </insert>
+        <insert tableName="user">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130004"/>
+            <column name="user_name" value="goldsilverTest2"/>
+            <column name="email" value="test1@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="4"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
+
+<!--
+TODO database schema:
+# User
+# Role
+# Customer
+# Volunteering Organization
+# Volunteer
+# Aid_Request
+# Notification
+# Subscriptions (for notifications / news)
+# Feedback
+# Donate (regular donation)
+# Product
+# Resources()
+# Priority Queue (in request)
+# Social category (categories of users -> valuable in prioritizing)
+# Fundraising product (may be in form of merch)???
+# Event (event from organization)
+# FundRaising (to track donations -> can be instead of statistics for donates)?? ==> gather money from events
+# Donation Statistics (entity for statistic that gathering by donors)
+# Statistics (can be just a class)???
+# Volunteering Category (Can be as an enum)???
+# Volunteering Spot (Place)???
+# Payment System???
+-->
