@@ -8,7 +8,7 @@
 
 
     <changeSet id="1.0.0" author="goldsilver12">
-        <createTable tableName="user">
+        <createTable tableName="users">
             <column name="id" type="${uuid_type}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -47,7 +47,7 @@
 
         </createTable>
 
-        <createTable tableName="role">
+        <createTable tableName="roles">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -71,12 +71,12 @@
 
 
             <addForeignKeyConstraint baseColumnNames="role_id"
-                                     baseTableName="user"
+                                     baseTableName="users"
                                      constraintName="fk_user_role"
                                      onDelete="CASCADE"
                                      onUpdate="RESTRICT"
                                      referencedColumnNames="id"
-                                     referencedTableName="role"/>
+                                     referencedTableName="roles"/>
     </changeSet>
 
 
@@ -105,7 +105,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="location_id" type="BIGINT" >
+            <column name="address" type="VARCHAR(255)" >
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -116,15 +116,8 @@
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="users"/>
 
-        <addForeignKeyConstraint baseColumnNames="location_id"
-                                 baseTableName="customer"
-                                 constraintName="fk_location_customer"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="location"/>
 
         <createTable tableName="notification">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -189,7 +182,7 @@
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="users"/>
 
 
         <createTable tableName="event">
@@ -346,7 +339,7 @@
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="users"/>
 
 
         <createTable tableName="organization_volunteer">
@@ -457,22 +450,22 @@
     
 
     <changeSet id="1.0.6" author="goldsilver12">
-        <insert tableName="role">
+        <insert tableName="roles">
             <column name="name" value="ROLE_ADMIN"/>
         </insert>
-        <insert tableName="role">
+        <insert tableName="roles">
             <column name="name" value="ROLE_CUSTOMER"/>
         </insert>
-        <insert tableName="role">
+        <insert tableName="roles">
             <column name="name" value="ROLE_ORGANIZATION_ADMIN"/>
         </insert>
-        <insert tableName="role">
+        <insert tableName="roles">
             <column name="name" value="ROLE_VOLUNTEER"/>
         </insert>
     </changeSet>
 
     <changeSet id="1.0.7" author="goldsilver12">
-        <insert tableName="user">
+        <insert tableName="users">
             <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130003"/>
             <column name="user_name" value="goldsilverTest1"/>
             <column name="email" value="test@nure.ua"/>
@@ -483,7 +476,7 @@
             <column name="social_category" value="NO_CATEGORY"/>
 
         </insert>
-        <insert tableName="user">
+        <insert tableName="users">
             <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130004"/>
             <column name="user_name" value="goldsilverTest2"/>
             <column name="email" value="test1@nure.ua"/>

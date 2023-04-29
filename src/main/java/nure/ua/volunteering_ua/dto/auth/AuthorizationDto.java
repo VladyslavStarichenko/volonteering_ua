@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.dto;
+package nure.ua.volunteering_ua.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

@@ -43,15 +43,16 @@ public class Customer {
 
   @OneToMany(mappedBy = "customer")
   private List<Feedback> feedbacks;
-
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "location_id", referencedColumnName = "id")
-  private Location location;
-  public Customer(User user) {
+  private String address;
+  public Customer(User user, String address) {
     this.user = user;
     this.notifications = new ArrayList<>();
     this.subscriptions = new ArrayList<>();
     this.requests = new ArrayList<>();
+    this.feedbacks = new ArrayList<>();
+    this.address = address;
+
+
   }
 
 }

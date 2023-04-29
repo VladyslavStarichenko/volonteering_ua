@@ -4,7 +4,7 @@ package nure.ua.volunteering_ua.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import nure.ua.volunteering_ua.dto.AuthenticationDto;
+import nure.ua.volunteering_ua.dto.auth.AuthenticationDto;
 import nure.ua.volunteering_ua.exeption.EmptyDataException;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
 import org.springframework.beans.factory.annotation.Autowired;

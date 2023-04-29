@@ -11,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
@@ -32,6 +34,7 @@ public class BaseEntity {
 
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private System_Status status;
 
 

@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.dto;
+package nure.ua.volunteering_ua.dto.auth;
 
 
 import lombok.Data;

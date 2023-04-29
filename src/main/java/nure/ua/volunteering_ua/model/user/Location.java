@@ -24,8 +24,6 @@ public class Location {
     @OneToOne(mappedBy = "location")
     private Event event;
 
-    @OneToOne(mappedBy = "location")
-    private Customer customer;
 
 
 }
