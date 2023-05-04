@@ -22,7 +22,6 @@ public class CustomerMapper implements Function<Customer, CustomerGetDto> {
     public CustomerGetDto apply(Customer customer) {
 
         return new CustomerGetDto(
-                customer.getId(),
                 customer.getUser().getUserName(),
                 customer.getUser().getEmail(),
                 customer.getAddress(),
