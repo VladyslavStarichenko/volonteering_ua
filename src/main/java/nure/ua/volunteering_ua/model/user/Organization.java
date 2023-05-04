@@ -25,7 +25,8 @@ public class Organization extends BaseEntity {
 
 
     @Enumerated(EnumType.STRING)
-    private Volunteering_Type volunteering_type;
+    @Column(name = "volunteering_type")
+    private VolunteeringType volunteeringType;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "organization_admin", referencedColumnName = "id")
@@ -53,20 +54,27 @@ public class Organization extends BaseEntity {
     @OneToMany(mappedBy = "organization")
     private List<Feedback> feedbacks;
 
-//    private List<Donate> donates;
 //    private String balance;
 //    private String stripe_api_key;
 //    private String stripe_public_key;
 //    private String stripe_secret_key;
 //    private List<Transactions> transactions;
 
-    public Organization(String name, Volunteering_Type volunteering_type, User organization_admin) {
+    public Organization(
+            String name,
+            VolunteeringType volunteeringType,
+            User organization_admin,
+            Location location
+    ) {
         this.name = name;
-        this.volunteering_type = volunteering_type;
+        this.volunteeringType = volunteeringType;
         this.organization_admin = organization_admin;
+        this.location = location;
         this.volunteers = new ArrayList<>();
         this.subscribers = new ArrayList<>();
         this.requests = new ArrayList<>();
-
+        this.events = new ArrayList<>();
+        this.products = new ArrayList<>();
+        this.feedbacks = new ArrayList<>();
     }
 }

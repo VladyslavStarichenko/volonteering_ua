@@ -31,4 +31,6 @@ public class Feedback {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
+
+
 }

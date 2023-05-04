@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nure.ua.volunteering_ua.model.user.Customer;
 import nure.ua.volunteering_ua.model.user.Organization;
-import nure.ua.volunteering_ua.model.user.Volunteering_Type;
+import nure.ua.volunteering_ua.model.user.VolunteeringType;
 
 import javax.persistence.*;
 
@@ -40,7 +40,7 @@ public class Aid_Request {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "volunteering_type")
-  private Volunteering_Type volunteeringType;
+  private VolunteeringType volunteeringType;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "request_status")
