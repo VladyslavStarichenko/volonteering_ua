@@ -6,21 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nure.ua.volunteering_ua.model.Request_Status;
-import nure.ua.volunteering_ua.model.user.Volunteering_Type;
+import nure.ua.volunteering_ua.model.user.VolunteeringType;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDto {
+public class RequestGetDto {
 
-    private Long id;
     private String title;
     private String description;
     private int amount;
     private String organization;
     private String customer;
     private Request_Status requestStatus;
-    private Volunteering_Type volunteering_type;
+    private VolunteeringType volunteeringType;
     private String receivingAddress;
     private int queueNumber;
 
