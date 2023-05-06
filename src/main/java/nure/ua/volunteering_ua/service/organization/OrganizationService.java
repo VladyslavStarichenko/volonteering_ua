@@ -18,7 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,10 +47,20 @@ public class OrganizationService {
                 admin,
                 organizationCreateDto.getLocation()
         );
+        checkOrganization(organization);
         OrganizationGetDto organizationGetDto = organizationMapper
                 .apply(organizationRepository.save(organization));
         organizationGetDto.setStatistic(new Statistic());
         return organizationGetDto;
+    }
+
+    private void checkOrganization(Organization organization) {
+        if (organizationRepository.findAllByOrg_admin(organization.getOrganization_admin().getId()).isPresent()) {
+            throw new CustomException("You're already an organization", HttpStatus.BAD_REQUEST);
+        }
+        if (organizationRepository.existsByName(organization.getName())) {
+            throw new CustomException("Organization with same name is already exists", HttpStatus.IM_USED);
+        }
     }
 
     private User getOrganizationAdmin() {
@@ -70,12 +83,20 @@ public class OrganizationService {
     }
 
     public List<OrganizationGetDto> getOrganizationByType(VolunteeringType type) {
-        return organizationRepository
-                .getAllByVolunteering_type(type.ordinal())
-                .stream()
-                .map(organizationMapper)
-                .collect(Collectors.toList());
+        List<Organization> organizations = organizationRepository.getAllByVolunteering_type(type.ordinal());
+        return Optional.ofNullable(organizations)
+                .filter(organizationsDb -> !organizationsDb.isEmpty())
+                .map(organizationsDb -> organizationsDb
+                        .stream()
+                        .map(organizationMapper)
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new CustomException(
+                        "There is no organizations with type provided",
+                        HttpStatus.NO_CONTENT)
+                );
     }
+
+
 
     public boolean delete() {
         User admin = userServiceSCRT.getCurrentLoggedInUser();
@@ -98,6 +119,14 @@ public class OrganizationService {
     public OrganizationPageResponse getAllOrganizations(int pageNumber, int sizeOfPage) {
         Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
         return organizationPageMapper.apply(organizationRepository.findAll(pageable));
+    }
+
+    public List<OrganizationGetDto> getOrganizationByVolunteer() {
+        return organizationRepository
+                .getAllByVolunteer(userServiceSCRT.getCurrentLoggedInUser().getId())
+                .stream()
+                .map(organizationMapper)
+                .collect(Collectors.toList());
     }
 
 }
