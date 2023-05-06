@@ -3,6 +3,7 @@ package nure.ua.volunteering_ua.dto.organization;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nure.ua.volunteering_ua.dto.LocationDto;
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.event.EventGetDto;
 import nure.ua.volunteering_ua.dto.feedback.FeedBackGetDto;
@@ -24,7 +25,7 @@ public class OrganizationGetDto {
     private List<CustomerGetDto> subscribers;
     private List<VolunteerGetDto> volunteers;
     private List<RequestGetDto> requests;
-    private Location location;
+    private LocationDto location;
     private List<EventGetDto> events;
     private List<ProductGetDto> products;
     private List<FeedBackGetDto> feedbacks;

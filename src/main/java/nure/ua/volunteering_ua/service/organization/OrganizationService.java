@@ -1,5 +1,6 @@
 package nure.ua.volunteering_ua.service.organization;
 
+import liquibase.pro.packaged.L;
 import nure.ua.volunteering_ua.dto.organization.OrganizationCreateDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationPageResponse;
@@ -7,9 +8,11 @@ import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.mapper.organization.OrganizationMapper;
 import nure.ua.volunteering_ua.mapper.organization.OrganizationPageMapper;
 import nure.ua.volunteering_ua.model.Statistic;
+import nure.ua.volunteering_ua.model.user.Location;
 import nure.ua.volunteering_ua.model.user.Organization;
 import nure.ua.volunteering_ua.model.user.User;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
+import nure.ua.volunteering_ua.repository.loction.LocationRepository;
 import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,26 +31,31 @@ public class OrganizationService {
     private final UserServiceSCRT userServiceSCRT;
     private final OrganizationMapper organizationMapper;
     private final OrganizationPageMapper organizationPageMapper;
+    private final LocationRepository locationRepository;
 
     @Autowired
-    public OrganizationService(OrganizationRepository organizationRepository, UserServiceSCRT userServiceSCRT, OrganizationMapper organizationMapper, OrganizationPageMapper organizationPageMapper) {
+    public OrganizationService(OrganizationRepository organizationRepository, UserServiceSCRT userServiceSCRT, OrganizationMapper organizationMapper, OrganizationPageMapper organizationPageMapper, LocationRepository locationRepository) {
         this.organizationRepository = organizationRepository;
         this.userServiceSCRT = userServiceSCRT;
         this.organizationMapper = organizationMapper;
         this.organizationPageMapper = organizationPageMapper;
+        this.locationRepository = locationRepository;
     }
 
     public OrganizationGetDto createOrganization(OrganizationCreateDto organizationCreateDto) {
+        Location location = new Location(organizationCreateDto.getLocation());
+        Location locationDb = locationRepository.save(location);
         User admin = getOrganizationAdmin();
         Organization organization = new Organization(
                 organizationCreateDto.getName(),
                 organizationCreateDto.getVolunteeringType(),
                 admin,
-                organizationCreateDto.getLocation()
+                locationDb
         );
         checkOrganization(organization);
+        Organization organizationDb = organizationRepository.save(organization);
         OrganizationGetDto organizationGetDto = organizationMapper
-                .apply(organizationRepository.save(organization));
+                .apply(organizationDb);
         organizationGetDto.setStatistic(new Statistic());
         return organizationGetDto;
     }

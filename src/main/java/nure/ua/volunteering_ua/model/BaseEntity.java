@@ -37,5 +37,7 @@ public class BaseEntity {
     @Enumerated(EnumType.STRING)
     private System_Status status;
 
-
+    public BaseEntity(System_Status status) {
+        this.status = status;
+    }
 }

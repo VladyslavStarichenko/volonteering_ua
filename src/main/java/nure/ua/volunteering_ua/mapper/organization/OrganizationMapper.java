@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class OrganizationMapper implements Function<Organization, OrganizationGetDto> {
@@ -25,6 +26,9 @@ public class OrganizationMapper implements Function<Organization, OrganizationGe
     private VolunteeringMapper volunteeringMapper;
     @Autowired
     private RequestMapper requestMapper;
+
+    @Autowired
+    private LocationMapper locationMapper;
 
     private final Statistic statistic = new Statistic();
 
@@ -46,7 +50,10 @@ public class OrganizationMapper implements Function<Organization, OrganizationGe
                         .stream()
                         .map(requestMapper)
                         .collect(Collectors.toList()),
-                organization.getLocation(),
+                Stream.of(organization.getLocation())
+                        .map(locationMapper)
+                        .findAny()
+                        .get(),
                 organization.getEvents()
                         .stream()
                         .map(eventMapper)

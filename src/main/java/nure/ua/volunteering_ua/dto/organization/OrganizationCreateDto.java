@@ -3,6 +3,7 @@ package nure.ua.volunteering_ua.dto.organization;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nure.ua.volunteering_ua.dto.LocationDto;
 import nure.ua.volunteering_ua.model.user.Location;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
 
@@ -13,5 +14,5 @@ public class OrganizationCreateDto {
 
     private String name;
     private VolunteeringType volunteeringType;
-    private Location location;
+    private LocationDto location;
 }

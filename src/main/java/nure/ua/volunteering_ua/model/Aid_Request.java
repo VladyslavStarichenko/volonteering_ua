@@ -10,6 +10,7 @@ import nure.ua.volunteering_ua.model.user.Organization;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Getter
@@ -54,5 +55,10 @@ public class Aid_Request {
 
   @Column(name = "receiving_address")
   private String receivingAddress;
+
+  private Date created_date;
+
+  private Date updated_date;
+
 
 }

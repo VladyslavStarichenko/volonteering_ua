@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,6 @@ import static java.util.function.Predicate.not;
         allowCredentials = "true", maxAge = 3600, allowedHeaders = "*")
 @Slf4j
 public class OrganizationController {
-
     private final OrganizationService organizationService;
 
     @Autowired
@@ -88,10 +88,12 @@ public class OrganizationController {
     @ApiOperation(value = "Create organization")
     @PreAuthorize("hasRole('ROLE_ORGANIZATION_ADMIN')")
     @PostMapping
-    public ResponseEntity<OrganizationGetDto> createOrganization(@ApiParam(value = "Organization object to create")
-                                                                 @RequestBody OrganizationCreateDto organizationCreateDto) {
+    public ResponseEntity<OrganizationGetDto> createOrganization(
+            @ApiParam(value = "Organization object to create", required = true)
+            @RequestBody OrganizationCreateDto organizationCreateDto) {
         OrganizationGetDto organization = organizationService
                 .createOrganization(organizationCreateDto);
         return new ResponseEntity<>(organization, HttpStatus.CREATED);
     }
+
 }

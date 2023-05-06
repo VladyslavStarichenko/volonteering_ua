@@ -66,6 +66,7 @@ public class Organization extends BaseEntity {
             User organization_admin,
             Location location
     ) {
+        super(System_Status.ACTIVE);
         this.name = name;
         this.volunteeringType = volunteeringType;
         this.organization_admin = organization_admin;
