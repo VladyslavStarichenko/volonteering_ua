@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface VolunteerRepository extends PagingAndSortingRepository<Volunteer, Long> {
-  Optional<Volunteer> findByUser(User user);
+  Optional<Volunteer> findByUser_UserName(String userName);
 }
