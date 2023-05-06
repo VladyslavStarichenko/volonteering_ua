@@ -54,7 +54,7 @@ public class OrganizationController {
     @GetMapping("/workingOrganizations")
     public ResponseEntity<List<OrganizationGetDto>> getOrganizationsByVolunteer() {
         return Optional.of(organizationService.getOrganizationByVolunteer())
-                .filter(not(List::isEmpty))
+                .filter(organizationGetDtos -> !organizationGetDtos.isEmpty())
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new CustomException("There is no organizations in your work account", HttpStatus.NO_CONTENT));
     }

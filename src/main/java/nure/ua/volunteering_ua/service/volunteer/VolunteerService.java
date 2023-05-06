@@ -36,7 +36,7 @@ public class VolunteerService {
                     volunteerRepository.save(volunteer);
                 }
             });
-            if (volunteerDb.isEmpty()) {
+            if (!volunteerDb.isPresent()) {
                 throw new CustomException("Volunteer not found", HttpStatus.NOT_FOUND);
             }
         });
@@ -52,7 +52,7 @@ public class VolunteerService {
                             volunteerRepository.save(volunteer);
                         }
                     });
-                    if (volunteerDb.isEmpty()) {
+                    if (!volunteerDb.isPresent()) {
                         throw new CustomException("Volunteer not found", HttpStatus.NOT_FOUND);
                     }
                 });
