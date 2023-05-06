@@ -18,10 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -99,8 +97,8 @@ public class OrganizationService {
 
 
     public boolean delete() {
-        User admin = userServiceSCRT.getCurrentLoggedInUser();
-        return organizationRepository.findAllByOrg_admin(admin.getId())
+        return organizationRepository
+                .findAllByOrg_admin(userServiceSCRT.getCurrentLoggedInUser().getId())
                 .map(org -> {
                     organizationRepository.delete(org);
                     return true;
@@ -109,11 +107,11 @@ public class OrganizationService {
     }
 
     public OrganizationGetDto getMyOrganization() {
-        User admin = getOrganizationAdmin();
-        return organizationRepository.findAllByOrg_admin(admin.getId())
+        User organizationAdmin = getOrganizationAdmin();
+        return organizationRepository.findAllByOrg_admin(organizationAdmin.getId())
                 .map(organizationMapper)
                 .orElseThrow(() -> new CustomException(
-                        "Organization not found for admin with id " + admin.getId(), HttpStatus.NOT_FOUND));
+                        "Organization not found for admin with id " + organizationAdmin.getId(), HttpStatus.NOT_FOUND));
     }
 
     public OrganizationPageResponse getAllOrganizations(int pageNumber, int sizeOfPage) {

@@ -1,6 +1,5 @@
 package nure.ua.volunteering_ua.controller;
 
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -9,7 +8,6 @@ import nure.ua.volunteering_ua.dto.organization.OrganizationCreateDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationPageResponse;
 import nure.ua.volunteering_ua.exeption.CustomException;
-import nure.ua.volunteering_ua.model.Statistic;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
 import nure.ua.volunteering_ua.service.organization.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
