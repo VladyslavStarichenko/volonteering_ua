@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.function.Predicate.not;
+
 @RestController
 @Api(value = "Operations with organization")
 @RequestMapping(value = "/organization/")
@@ -52,7 +54,7 @@ public class OrganizationController {
     @GetMapping("/workingOrganizations")
     public ResponseEntity<List<OrganizationGetDto>> getOrganizationsByVolunteer() {
         return Optional.of(organizationService.getOrganizationByVolunteer())
-                .filter(organizationGetDtos -> !organizationGetDtos.isEmpty())
+                .filter(not(List::isEmpty))
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new CustomException("There is no organizations in your work account", HttpStatus.NO_CONTENT));
     }
@@ -93,5 +95,4 @@ public class OrganizationController {
                 .createOrganization(organizationCreateDto);
         return new ResponseEntity<>(organization, HttpStatus.CREATED);
     }
-
 }
