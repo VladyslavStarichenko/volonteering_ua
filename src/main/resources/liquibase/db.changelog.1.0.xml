@@ -493,6 +493,18 @@
             <column name="role_id" value="4"/>
             <column name="social_category" value="NO_CATEGORY"/>
         </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130007"/>
+            <column name="user_name" value="goldsilverTest3"/>
+            <column name="email" value="test@nure.ua"/>
+            <column name="password" value="$2a$12$A7Q3BLtAebr5IxjaPOy1.eKGKCQoP94Egs4pAzO0rCyv4OoYZNqcW"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="1"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+
+        </insert>
     </changeSet>
 
 </databaseChangeLog>
