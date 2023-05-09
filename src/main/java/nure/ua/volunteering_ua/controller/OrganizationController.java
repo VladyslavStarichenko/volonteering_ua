@@ -24,9 +24,9 @@ import static java.util.function.Predicate.not;
 @RestController
 @Api(value = "Operations with organization")
 @RequestMapping(value = "/organization/")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8000"},
-        methods = {RequestMethod.GET, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.POST},
-        allowCredentials = "true", maxAge = 3600, allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8000"},
+//        methods = {RequestMethod.GET, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.POST},
+//        allowCredentials = "true", maxAge = 3600, allowedHeaders = "*")
 @Slf4j
 public class OrganizationController {
     private final OrganizationService organizationService;
