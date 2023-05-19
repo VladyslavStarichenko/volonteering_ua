@@ -20,7 +20,7 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
   Optional<Organization> getOrganizationByName(@Param("name") String name);
 
   @Query(value = "SELECT * FROM organization o WHERE o.volunteering_type = ?", nativeQuery = true)
-  List<Organization> getAllByVolunteering_type(int volunteering_type);
+  List<Organization> getAllByVolunteering_type(String volunteering_type);
 
   @Query(value = "SELECT * FROM organization o WHERE o.id IN" +
           " (SELECT ov.organization_id FROM organization_volunteers ov WHERE ov.volunteer_id IN(" +

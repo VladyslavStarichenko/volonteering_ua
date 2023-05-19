@@ -1,12 +1,17 @@
 package nure.ua.volunteering_ua.model.user;
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import nure.ua.volunteering_ua.dto.LocationDto;
 import nure.ua.volunteering_ua.model.Event;
 
 @Entity
 @Table(name = "location")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Location {
 
     @Id

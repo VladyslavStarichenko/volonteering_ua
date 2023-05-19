@@ -89,7 +89,7 @@ public class OrganizationService {
     }
 
     public List<OrganizationGetDto> getOrganizationByType(VolunteeringType type) {
-        List<Organization> organizations = organizationRepository.getAllByVolunteering_type(type.ordinal());
+        List<Organization> organizations = organizationRepository.getAllByVolunteering_type(type.toString());
         return Optional.ofNullable(organizations)
                 .filter(organizationsDb -> !organizationsDb.isEmpty())
                 .map(organizationsDb -> organizationsDb

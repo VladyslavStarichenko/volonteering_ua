@@ -27,7 +27,7 @@ public class Volunteer {
 
   @ManyToMany
   @JoinTable(
-          name = "organization_volunteers",
+          name = "organization_volunteer",
           joinColumns = @JoinColumn(name = "volunteer_id"),
           inverseJoinColumns = @JoinColumn(name = "organization_id")
   )

@@ -56,8 +56,10 @@ public class Aid_Request {
   @Column(name = "receiving_address")
   private String receivingAddress;
 
+  @Column(name = "create_date")
   private Date created_date;
 
+  @Column(name = "update_date")
   private Date updated_date;
 
 
