@@ -268,7 +268,7 @@
               <constraints nullable="true"/>
           </column>
           <column name="event_id" type="BIGINT">
-              <constraints nullable="false"/>
+              <constraints nullable="true"/>
           </column>
           <column name="organization_id" type="BIGINT">
               <constraints nullable="false"/>
@@ -299,6 +299,9 @@
                 <constraints nullable="true"/>
             </column>
             <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="int">
                 <constraints nullable="false"/>
             </column>
             <column name="organization_id" type="BIGINT">
@@ -472,6 +475,9 @@
     </changeSet>
 
     <changeSet id="1.0.7" author="goldsilver12">
+
+
+
         <insert tableName="users">
             <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130003"/>
             <column name="user_name" value="goldsilverTest1"/>
@@ -498,14 +504,406 @@
             <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130007"/>
             <column name="user_name" value="goldsilverTest3"/>
             <column name="email" value="test@nure.ua"/>
-            <column name="password" value="$2a$12$A7Q3BLtAebr5IxjaPOy1.eKGKCQoP94Egs4pAzO0rCyv4OoYZNqcW"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
             <column name="created" value="2021-09-29 22:54:27.291000"/>
             <column name="status" value="ACTIVE"/>
-            <column name="role_id" value="1"/>
+            <column name="role_id" value="2"/>
             <column name="social_category" value="NO_CATEGORY"/>
 
         </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130015"/>
+            <column name="user_name" value="goldsilverTest4"/>
+            <column name="email" value="test7@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="2"/>
+            <column name="social_category" value="UNEMPLOYED_PERSONS"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130435"/>
+            <column name="user_name" value="goldsilverTestOrgAdmin1"/>
+            <column name="email" value="testOrgA1@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="3"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130481"/>
+            <column name="user_name" value="goldsilverTestOrgAdmin2"/>
+            <column name="email" value="testOrgA2@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="3"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130088"/>
+            <column name="user_name" value="goldsilverTest5"/>
+            <column name="email" value="test6@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="4"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130098"/>
+            <column name="user_name" value="goldsilverTest6"/>
+            <column name="email" value="test4@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="4"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130016"/>
+            <column name="user_name" value="goldsilverTest7"/>
+            <column name="email" value="test1@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="4"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="076a697c-2d1f-11ec-8d3d-0242ac130017"/>
+            <column name="user_name" value="goldsilverTest8"/>
+            <column name="email" value="test2@nure.ua"/>
+            <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
+            <column name="created" value="2021-09-29 22:54:27.291000"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="role_id" value="4"/>
+            <column name="social_category" value="NO_CATEGORY"/>
+        </insert>
+
+        <insert tableName="location">
+            <column name="id" value="1"/>
+            <column name="address" value="123 Main Street"/>
+            <column name="latitude" valueNumeric="40.7128"/>
+            <column name="longitude" valueNumeric="-74.0060"/>
+        </insert>
+
+        <insert tableName="location">
+            <column name="id" value="2"/>
+            <column name="address" value="123 Main Street"/>
+            <column name="latitude" valueNumeric="40.7125"/>
+            <column name="longitude" valueNumeric="-74.0560"/>
+        </insert>
+
+        <insert tableName="location">
+            <column name="id" value="3"/>
+            <column name="address" value="123 Main Street"/>
+            <column name="latitude" valueNumeric="40.7123"/>
+            <column name="longitude" valueNumeric="-74.0360"/>
+        </insert>
+
+        <insert tableName="location">
+            <column name="id" value="4"/>
+            <column name="address" value="123 Main Street"/>
+            <column name="latitude" valueNumeric="40.7124"/>
+            <column name="longitude" valueNumeric="-74.0560"/>
+        </insert>
+
+        <insert tableName="organization">
+            <column name="id" value="1"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created" valueComputed="now()"/>
+            <column name="updated" valueComputed="now()"/>
+            <column name="name" value="Organization 1"/>
+            <column name="volunteering_type" value="SOCIAL"/>
+            <column name="location_id" valueNumeric="1"/>
+            <column name="organization_admin" value="076a697c-2d1f-11ec-8d3d-0242ac130435"/>
+        </insert>
+
+        <insert tableName="organization">
+            <column name="id" value="2"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created" valueComputed="now()"/>
+            <column name="updated" valueComputed="now()"/>
+            <column name="name" value="Organization 2"/>
+            <column name="volunteering_type" value="ANIMALS"/>
+            <column name="location_id" value="2"/>
+            <column name="organization_admin" value="076a697c-2d1f-11ec-8d3d-0242ac130481"/>
+        </insert>
+
+        <insert tableName="volunteer">
+            <column name="id" value="1"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130017"/>
+        </insert>
+
+        <insert tableName="volunteer">
+            <column name="id" value="2"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130016"/>
+        </insert>
+
+        <insert tableName="volunteer">
+            <column name="id" value="3"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130098"/>
+        </insert>
+        <insert tableName="volunteer">
+            <column name="id" value="4"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130088"/>
+        </insert>
+
+        <insert tableName="customer">
+            <column name="id" value="1"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130015"/>
+            <column name="address" value="456 Elm St"/>
+        </insert>
+
+        <insert tableName="customer">
+            <column name="id" value="2"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130088"/>
+            <column name="address" value="452 Elm St"/>
+        </insert>
+
+        <insert tableName="customer">
+            <column name="id" value="3"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130098"/>
+            <column name="address" value="456 Elm St"/>
+        </insert>
+
+        <insert tableName="notification">
+            <column name="id" value="1"/>
+            <column name="message" value="Notification message"/>
+            <column name="customer_id" value="1"/>
+        </insert>
+
+        <insert tableName="notification">
+            <column name="id" value="2"/>
+            <column name="message" value="Notification message"/>
+            <column name="customer_id" value="2"/>
+        </insert>
+
+        <insert tableName="notification">
+            <column name="id" value="3"/>
+            <column name="message" value="Notification message"/>
+            <column name="customer_id" value="2"/>
+        </insert>
+
+        <insert tableName="event">
+            <column name="id" value="1"/>
+            <column name="created" value="2023-05-19 12:00:00"/>
+            <column name="updated" value="2023-05-19 12:00:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="name" value="Event A"/>
+            <column name="description" value="Event description"/>
+            <column name="end_date" value="2023-05-20"/>
+            <column name="start_date" value="2023-05-19"/>
+            <column name="location_id" value="3"/>
+            <column name="organization_id" value="1"/>
+        </insert>
+
+        <insert tableName="event">
+            <column name="id" value="2"/>
+            <column name="created" value="2023-05-19 12:00:00"/>
+            <column name="updated" value="2023-05-19 12:00:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="name" value="Event B"/>
+            <column name="description" value="Event description"/>
+            <column name="end_date" value="2023-05-20"/>
+            <column name="start_date" value="2023-05-19"/>
+            <column name="location_id" value="4"/>
+            <column name="organization_id" value="2"/>
+        </insert>
+
+        <insert tableName="event">
+            <column name="id" value="3"/>
+            <column name="created" value="2023-05-19 12:00:00"/>
+            <column name="updated" value="2023-05-19 12:00:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="name" value="Event B"/>
+            <column name="description" value="Event description"/>
+            <column name="end_date" value="2023-05-20"/>
+            <column name="start_date" value="2023-05-19"/>
+            <column name="location_id" value="3"/>
+            <column name="organization_id" value="1"/>
+        </insert>
+
+        <insert tableName="product">
+            <column name="id" value="1"/>
+            <column name="created" value="2023-05-19 10:30:00"/>
+            <column name="updated" value="2023-05-19 10:30:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="amount" value="100"/>
+            <column name="name" value="Product Name"/>
+            <column name="description" value="Product Description"/>
+            <column name="image" value="url1"/>
+            <column name="event_id" value="2"/>
+            <column name="organization_id" value="1"/>
+        </insert>
+
+        <insert tableName="product">
+            <column name="id" value="2"/>
+            <column name="created" value="2023-05-19 10:30:00"/>
+            <column name="updated" value="2023-05-19 10:30:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="amount" value="100"/>
+            <column name="name" value="Product Name"/>
+            <column name="description" value="Product Description"/>
+            <column name="image" value="url1"/>
+            <column name="event_id" value="null"/>
+            <column name="organization_id" value="1"/>
+        </insert>
+
+        <insert tableName="product">
+            <column name="id" value="3"/>
+            <column name="created" value="2023-05-19 10:30:00"/>
+            <column name="updated" value="2023-05-19 10:30:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="amount" value="100"/>
+            <column name="name" value="Product Name1"/>
+            <column name="description" value="Product Description"/>
+            <column name="image" value="url1"/>
+            <column name="event_id" value="1"/>
+            <column name="organization_id" value="2"/>
+        </insert>
+
+        <insert tableName="product">
+            <column name="id" value="4"/>
+            <column name="created" value="2023-05-19 10:30:00"/>
+            <column name="updated" value="2023-05-19 10:30:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="amount" value="100"/>
+            <column name="name" value="Product Name2"/>
+            <column name="description" value="Product Description"/>
+            <column name="image" value="url1"/>
+            <column name="event_id" value="null"/>
+            <column name="organization_id" value="2"/>
+        </insert>
+
+        <insert tableName="feedback">
+            <column name="id" value="1"/>
+            <column name="customer_id" value="1"/>
+            <column name="rating" value="5"/>
+            <column name="organization_id" value="1"/>
+            <column name="comment" value="This is a feedback message."/>
+        </insert>
+        <insert tableName="feedback">
+            <column name="id" value="2"/>
+            <column name="customer_id" value="1"/>
+            <column name="rating" value="5"/>
+            <column name="organization_id" value="1"/>
+            <column name="comment" value="This is a feedback message."/>
+        </insert>
+        <insert tableName="feedback">
+            <column name="id" value="3"/>
+            <column name="customer_id" value="2"/>
+            <column name="rating" value="5"/>
+            <column name="organization_id" value="2"/>
+            <column name="comment" value="This is a feedback message."/>
+        </insert>
+
+        <insert tableName="feedback">
+            <column name="id" value="4"/>
+            <column name="customer_id" value="1"/>
+            <column name="rating" value="3"/>
+            <column name="organization_id" value="2"/>
+            <column name="comment" value="This is a feedback message."/>
+        </insert>
+
+        <insert tableName="organization_volunteer">
+            <column name="volunteer_id" value="1"/>
+            <column name="organization_id" value="1"/>
+        </insert>
+
+        <insert tableName="organization_volunteer">
+            <column name="volunteer_id" value="2"/>
+            <column name="organization_id" value="1"/>
+        </insert>
+
+        <insert tableName="organization_volunteer">
+            <column name="volunteer_id" value="1"/>
+            <column name="organization_id" value="2"/>
+        </insert>
+
+        <insert tableName="organization_volunteer">
+            <column name="volunteer_id" value="3"/>
+            <column name="organization_id" value="2"/>
+        </insert>
+
+
+
+        <insert tableName="request">
+            <column name="id" value="1"/>
+            <column name="amount" value="100"/>
+            <column name="confirmation_code" value="1234"/>
+            <column name="description" value="Sample description"/>
+            <column name="queue_number" value="1"/>
+            <column name="receiving_address" value="Sample address"/>
+            <column name="request_status" value="VERIFICATION"/>
+            <column name="title" value="Sample title"/>
+            <column name="volunteering_type" value="SOCIAL"/>
+            <column name="customer_id" value="1"/>
+            <column name="organization_id" value="1"/>
+            <column name="create_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="request">
+            <column name="id" value="3"/>
+            <column name="amount" value="1002"/>
+            <column name="confirmation_code" value="12343"/>
+            <column name="description" value="Sample description3"/>
+            <column name="queue_number" value="1"/>
+            <column name="receiving_address" value="Sample address3"/>
+            <column name="request_status" value="VERIFICATION"/>
+            <column name="title" value="Sample titl3e"/>
+            <column name="volunteering_type" value="ANIMALS"/>
+            <column name="customer_id" value="1"/>
+            <column name="organization_id" value="1"/>
+            <column name="create_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+
+        <insert tableName="request">
+            <column name="id" value="2"/>
+            <column name="amount" value="1030"/>
+            <column name="confirmation_code" value="12334"/>
+            <column name="description" value="Sample description2"/>
+            <column name="queue_number" value="2"/>
+            <column name="receiving_address" value="Sample address2"/>
+            <column name="request_status" value="VERIFICATION"/>
+            <column name="title" value="Sample title2"/>
+            <column name="volunteering_type" value="SOCIAL"/>
+            <column name="customer_id" value="2"/>
+            <column name="organization_id" value="1"/>
+            <column name="create_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+
+        <insert tableName="subscription">
+            <column name="customer_id" value="1"/>
+            <column name="organization_id" value="1"/>
+        </insert>
+
+        <insert tableName="subscription">
+            <column name="customer_id" value="1"/>
+            <column name="organization_id" value="2"/>
+        </insert>
+
+        <insert tableName="subscription">
+            <column name="customer_id" value="2"/>
+            <column name="organization_id" value="2"/>
+        </insert>
+
+
+
     </changeSet>
+
+
 
 </databaseChangeLog>
 

@@ -2,6 +2,7 @@ package nure.ua.volunteering_ua.mapper.organization;
 
 import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
 import nure.ua.volunteering_ua.mapper.*;
+import nure.ua.volunteering_ua.model.Feedback;
 import nure.ua.volunteering_ua.model.Statistic;
 import nure.ua.volunteering_ua.model.user.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,13 @@ public class OrganizationMapper implements Function<Organization, OrganizationGe
                         .stream()
                         .map(feedBackMapper)
                         .collect(Collectors.toList()),
-                statistic.getStatistic(organization)
+                statistic.getStatistic(organization),
+                organization.getFeedbacks()
+                        .stream()
+                        .map(Feedback::getRating)
+                        .mapToInt(Integer::intValue)
+                        .average()
+                        .orElse(0.0)
 
         );
     }

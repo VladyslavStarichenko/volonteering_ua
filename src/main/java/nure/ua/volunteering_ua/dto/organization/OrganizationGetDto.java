@@ -30,4 +30,5 @@ public class OrganizationGetDto {
     private List<ProductGetDto> products;
     private List<FeedBackGetDto> feedbacks;
     private Statistic statistic;
+    private double rating;
 }

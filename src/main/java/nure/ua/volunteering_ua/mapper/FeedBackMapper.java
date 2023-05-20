@@ -13,7 +13,8 @@ public class FeedBackMapper implements Function<Feedback, FeedBackGetDto> {
         return new FeedBackGetDto(
                 feedback.getComment(),
                 feedback.getCustomer().getUser().getUserName(),
-                feedback.getOrganization().getName()
+                feedback.getOrganization().getName(),
+                feedback.getRating()
         );
     }
 }
