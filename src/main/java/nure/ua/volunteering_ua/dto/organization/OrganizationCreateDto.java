@@ -15,4 +15,5 @@ public class OrganizationCreateDto {
     private String name;
     private VolunteeringType volunteeringType;
     private LocationDto location;
+    private String imageURL;
 }

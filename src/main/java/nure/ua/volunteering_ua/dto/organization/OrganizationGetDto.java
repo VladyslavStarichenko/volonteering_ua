@@ -20,6 +20,7 @@ import java.util.List;
 public class OrganizationGetDto {
 
     private String name;
+    private String imageURL;
     private String admin;
     private String type;
     private List<CustomerGetDto> subscribers;

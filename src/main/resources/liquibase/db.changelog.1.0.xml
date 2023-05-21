@@ -145,6 +145,7 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="imageURL" type="VARCHAR(25)" defaultValue=""/>
             <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
@@ -620,6 +621,7 @@
         <insert tableName="organization">
             <column name="id" value="1"/>
             <column name="status" value="ACTIVE"/>
+            <column name="imageURL" value=""/>
             <column name="created" valueComputed="now()"/>
             <column name="updated" valueComputed="now()"/>
             <column name="name" value="Organization 1"/>
@@ -631,6 +633,7 @@
         <insert tableName="organization">
             <column name="id" value="2"/>
             <column name="status" value="ACTIVE"/>
+            <column name="imageURL" value=""/>
             <column name="created" valueComputed="now()"/>
             <column name="updated" valueComputed="now()"/>
             <column name="name" value="Organization 2"/>

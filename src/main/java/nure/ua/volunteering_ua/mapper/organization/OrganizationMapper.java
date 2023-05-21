@@ -37,6 +37,7 @@ public class OrganizationMapper implements Function<Organization, OrganizationGe
     public OrganizationGetDto apply(Organization organization) {
         return new OrganizationGetDto(
                 organization.getName(),
+                organization.getImageURL(),
                 organization.getOrganization_admin().getUserName(),
                 organization.getVolunteeringType().name(),
                 organization.getSubscribers()
