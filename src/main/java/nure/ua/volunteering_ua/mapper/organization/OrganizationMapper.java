@@ -8,6 +8,7 @@ import nure.ua.volunteering_ua.model.user.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,7 +38,8 @@ public class OrganizationMapper implements Function<Organization, OrganizationGe
     public OrganizationGetDto apply(Organization organization) {
         return new OrganizationGetDto(
                 organization.getName(),
-                organization.getImageURL(),
+                organization.getImageURL() != null ? organization.getImageURL() : "",
+//                Optional.ofNullable(organization.getImageURL()),
                 organization.getOrganization_admin().getUserName(),
                 organization.getVolunteeringType().name(),
                 organization.getSubscribers()

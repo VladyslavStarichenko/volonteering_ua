@@ -23,6 +23,7 @@ public class Organization extends BaseEntity {
     private Long id;
     private String name;
 
+    @Column(name = "image_url")
     private String imageURL;
     @Enumerated(EnumType.STRING)
     @Column(name = "volunteering_type")
