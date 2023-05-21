@@ -820,7 +820,7 @@
         </insert>
 
         <insert tableName="organization_volunteer">
-            <column name="volunteer_id" value="2"/>
+            <column name="volunteer_id" value="1"/>
             <column name="organization_id" value="1"/>
         </insert>
 
@@ -830,7 +830,7 @@
         </insert>
 
         <insert tableName="organization_volunteer">
-            <column name="volunteer_id" value="3"/>
+            <column name="volunteer_id" value="2"/>
             <column name="organization_id" value="2"/>
         </insert>
 
