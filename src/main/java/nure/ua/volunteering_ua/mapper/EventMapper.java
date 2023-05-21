@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class EventMapper implements Function<Event, EventGetDto> {
 
     @Autowired
     private ProductMapper productMapper;
+    @Autowired LocationMapper locationMapper;
 
     @Override
     public EventGetDto apply(Event event) {
@@ -25,7 +27,10 @@ public class EventMapper implements Function<Event, EventGetDto> {
                         .stream()
                         .map(productMapper)
                         .collect(Collectors.toList()),
-                event.getLocation()
+                Stream.of(event.getLocation())
+                        .map(locationMapper)
+                        .findFirst().get()
+
         );
     }
 }

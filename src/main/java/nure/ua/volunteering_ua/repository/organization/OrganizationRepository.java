@@ -23,9 +23,15 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
   List<Organization> getAllByVolunteering_type(String volunteering_type);
 
   @Query(value = "SELECT * FROM organization o WHERE o.id IN" +
-          " (SELECT ov.organization_id FROM organization_volunteers ov WHERE ov.volunteer_id IN(" +
-          "SELECT volunteer_id FROM ov WHERE user_id == ?)) ", nativeQuery = true)
+          " (SELECT ov.organization_id FROM organization_volunteer ov WHERE ov.volunteer_id IN(" +
+          "SELECT volunteer_id FROM volunteer WHERE user_id =?)) ", nativeQuery = true)
   List<Organization> getAllByVolunteer(UUID userVolunteerId);
+
+
+  @Query(value = "SELECT * FROM organization o WHERE o.id IN" +
+          " (SELECT s.organization_id FROM subscription s WHERE s.customer_id IN(" +
+          "SELECT customer_id FROM customer WHERE user_id =?)) ", nativeQuery = true)
+  List<Organization> getAllByCustomer(UUID userVolunteerId);
 
   Page<Organization> findAll(Pageable pageable);
 

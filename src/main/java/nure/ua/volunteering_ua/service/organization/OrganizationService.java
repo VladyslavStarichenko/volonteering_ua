@@ -1,6 +1,5 @@
 package nure.ua.volunteering_ua.service.organization;
 
-import liquibase.pro.packaged.L;
 import nure.ua.volunteering_ua.dto.organization.OrganizationCreateDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationPageResponse;
@@ -12,7 +11,7 @@ import nure.ua.volunteering_ua.model.user.Location;
 import nure.ua.volunteering_ua.model.user.Organization;
 import nure.ua.volunteering_ua.model.user.User;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
-import nure.ua.volunteering_ua.repository.loction.LocationRepository;
+import nure.ua.volunteering_ua.repository.location.LocationRepository;
 import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ public class OrganizationService {
     private final OrganizationMapper organizationMapper;
     private final OrganizationPageMapper organizationPageMapper;
     private final LocationRepository locationRepository;
+
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository, UserServiceSCRT userServiceSCRT, OrganizationMapper organizationMapper, OrganizationPageMapper organizationPageMapper, LocationRepository locationRepository) {
@@ -134,5 +134,32 @@ public class OrganizationService {
                 .map(organizationMapper)
                 .collect(Collectors.toList());
     }
+
+    public List<OrganizationGetDto> getOrganizationByCustomer() {
+        return organizationRepository
+                .getAllByCustomer(userServiceSCRT.getCurrentLoggedInUser().getId())
+                .stream()
+                .map(organizationMapper)
+                .collect(Collectors.toList());
+    }
+
+    public OrganizationGetDto updateOrganization(OrganizationCreateDto organizationCreateDto) {
+        Optional<Organization> organization2Update = organizationRepository
+                .findAllByOrg_admin(userServiceSCRT.getCurrentLoggedInUser().getId());
+        Organization organization = organization2Update.map(org -> {
+            Location location = locationRepository.getLocationsByAddress(organizationCreateDto.getLocation().getAddress())
+                    .orElseGet(() -> {
+                        Location newLocation = new Location(organizationCreateDto.getLocation());
+                        locationRepository.save(newLocation);
+                        return newLocation;
+                    });
+            org.setName(organizationCreateDto.getName());
+            org.setLocation(location);
+            org.setVolunteeringType(organizationCreateDto.getVolunteeringType());
+            return organizationRepository.save(org);
+        }).orElseThrow(() -> new CustomException("Error during updating the organization", HttpStatus.BAD_REQUEST));
+        return organizationMapper.apply(organization);
+    }
+
 
 }

@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Long> {
 
   Optional<Customer> findByUser(User user);
+
+  Optional<Customer> findCustomerByUser_UserName(String username);
 }

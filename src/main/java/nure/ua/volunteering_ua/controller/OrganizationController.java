@@ -56,6 +56,16 @@ public class OrganizationController {
                 .orElseThrow(() -> new CustomException("There is no organizations in your work account", HttpStatus.NO_CONTENT));
     }
 
+    @ApiOperation(value = "Get volunteering organizations by customer (customer Subscriptions)")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping("/customer-organizations")
+    public ResponseEntity<List<OrganizationGetDto>> getOrganizationsByCustomer() {
+        return Optional.of(organizationService.getOrganizationByCustomer())
+                .filter(not(List::isEmpty))
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new CustomException("There is no organizations in your work account", HttpStatus.NO_CONTENT));
+    }
+
     @ApiOperation(value = "Get volunteering organizations by volunteering type")
     @GetMapping("/volunteeringType/{volunteeringType}")
     public ResponseEntity<List<OrganizationGetDto>> getOrganizationsByVolunteeringType( @PathVariable VolunteeringType volunteeringType) {
@@ -84,9 +94,20 @@ public class OrganizationController {
 
     @ApiOperation(value = "Create organization")
     @PreAuthorize("hasRole('ROLE_ORGANIZATION_ADMIN')")
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<OrganizationGetDto> createOrganization(
             @ApiParam(value = "Organization object to create", required = true)
+            @RequestBody OrganizationCreateDto organizationCreateDto) {
+        OrganizationGetDto organization = organizationService
+                .createOrganization(organizationCreateDto);
+        return new ResponseEntity<>(organization, HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Update organization")
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION_ADMIN')")
+    @PostMapping("/update")
+    public ResponseEntity<OrganizationGetDto> updateOrganization(
+            @ApiParam(value = "Organization object for updating", required = true)
             @RequestBody OrganizationCreateDto organizationCreateDto) {
         OrganizationGetDto organization = organizationService
                 .createOrganization(organizationCreateDto);
