@@ -1,8 +1,10 @@
 package nure.ua.volunteering_ua.model;
 
+import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.model.user.SocialCategory;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.http.HttpStatus;
 
 import java.util.Comparator;
 import java.util.List;
@@ -12,71 +14,68 @@ public class Queue {
 
 
     public Pair<Integer, List<Aid_Request>> getQueueNumber(SocialCategory socialCategory, VolunteeringType volunteeringType, List<Aid_Request> requests) {
-
-
-//        requests.sort(Comparator.comparingInt(Aid_Request::getQueueNumber));
+//        requests.sort(Comparator.comparingInt((Aid_Request request) -> -getPriority(request.getCustomer().getUser().getSocialCategory().toString()))
+//                .thenComparingInt(request -> -getPriorityByVolunteeringType(request.getVolunteeringType().toString())));
 //
 //        int lastQueueNumber = requests.size();
-//        for(int i = requests.size(); i >= 0;){
-//            if (getPriority(requests.get(i).getCustomer().getUser().getSocialCategory().toString()) < getPriority(socialCategory.toString())
-//                    || (getPriority(requests.get(i).getCustomer().getUser().getSocialCategory().toString()) == getPriority(socialCategory.toString())
-//                    && getPriorityByVolunteeringType(requests.get(i).getVolunteeringType().toString()) < getPriorityByVolunteeringType(volunteeringType.toString()))){
-//                lastQueueNumber --;
-//            }
-//            else {
-//                break;
-//            }
-//        }
-
-        // Sort the requests based on social category and volunteering type priorities
-        requests.sort(Comparator.comparingInt((Aid_Request request) -> getPriority(request.getCustomer().getUser().getSocialCategory().toString()))
-                .thenComparingInt(request -> getPriorityByVolunteeringType(request.getVolunteeringType().toString())));
-
-        // Find the index where to insert the new request based on social category and volunteering type
-//        int insertIndex = 0;
-//        for (Aid_Request request : requests) {
-//            if (getPriority(request.getCustomer().getUser().getSocialCategory().toString()) < getPriority(socialCategory.toString())
+//        int newQueueNumberIndex = lastQueueNumber;
+//        for (int i = requests.size() - 1; i >= 0; i--) {
+//            Aid_Request request = requests.get(i);
+//            if (getPriority(request.getCustomer().getUser().getSocialCategory().toString()) > getPriority(socialCategory.toString())
 //                    || (getPriority(request.getCustomer().getUser().getSocialCategory().toString()) == getPriority(socialCategory.toString())
-//                    && getPriorityByVolunteeringType(request.getVolunteeringType().toString()) < getPriorityByVolunteeringType(volunteeringType.toString()))) {
-//                insertIndex++;
-//            } else {
+//                    && getPriorityByVolunteeringType(request.getVolunteeringType().toString()) > getPriorityByVolunteeringType(volunteeringType.toString()))) {
+//                newQueueNumberIndex = i + 1;
 //                break;
 //            }
 //        }
+//
+        int newQueueNumber = getQueueNumbe(socialCategory,volunteeringType,requests);
+//        if (newQueueNumberIndex < requests.size()) {
+//            newQueueNumber = requests.get(newQueueNumberIndex).getQueueNumber();
+//            updateQueueNumbers(requests, newQueueNumberIndex, newQueueNumber + 1);
+//        } else {
+//            newQueueNumber = requests.size() + 1;
+//        }
+//
+//        Aid_Request newRequest = new Aid_Request(); // Create a new instance of the request
+//        newRequest.setQueueNumber(newQueueNumber); // Set the queue number for the new request
+//        newRequest.setVolunteeringType(volunteeringType); // Set the volunteering type for the new request
+//        // Set other properties of the new request as needed
+//        requests.add(newRequest); // Add the new request to the list
+        updateQueueNumber(requests,newQueueNumber);
+        return Pair.of(newQueueNumber, requests);
+    }
 
-        //TODO iterating from last element
-        // if lastElement getSocialCategory == ElementToAddSocialCategory && lastElement getVolunteeringType == ElementToAdd getVolunteeringType
-        // return last element queue number+1
-        // else if lastElement getSocialCategory <= ElementToAddSocialCategory && lastElement getVolunteeringType == ElementToAdd getVolunteeringType
-        int lastQueueNumber = requests.size();
-        int newQueueNumberIndex = lastQueueNumber;
-        for (int i = requests.size()-1; i >= 0; ) {
-            if (getPriority(requests.get(i).getCustomer().getUser().getSocialCategory().toString()) < getPriority(socialCategory.toString())
-                    || (getPriority(requests.get(i).getCustomer().getUser().getSocialCategory().toString()) == getPriority(socialCategory.toString())
-                    && getPriorityByVolunteeringType(requests.get(i).getVolunteeringType().toString()) < getPriorityByVolunteeringType(volunteeringType.toString())
-                    || getPriorityByVolunteeringType(requests.get(i).getVolunteeringType().toString()) == getPriorityByVolunteeringType(volunteeringType.toString()))) {
-                newQueueNumberIndex = i;
-                break;
-            } else {
+    private int getQueueNumbe(SocialCategory socialCategory, VolunteeringType volunteeringType, List<Aid_Request> requests){
+        requests.sort(Comparator.comparingInt(Aid_Request::getQueueNumber));
+        if(requests.isEmpty()){
+            return 1;
+        }
+        for(int i = requests.size()-1; i>=0;){
+            Aid_Request request = requests.get(i);
+            if(getPriority(request.getCustomer().getUser().getSocialCategory().toString()) > getPriority(socialCategory.toString())){
                 i--;
+            }else if(getPriority(request.getCustomer().getUser().getSocialCategory().toString()) <= getPriority(socialCategory.toString())
+                    && getPriorityByVolunteeringType(request.getVolunteeringType().toString()) > getPriorityByVolunteeringType(volunteeringType.toString())){
+                i--;
+            }else if(getPriority(request.getCustomer().getUser().getSocialCategory().toString()) <= getPriority(socialCategory.toString())
+                    && getPriorityByVolunteeringType(request.getVolunteeringType().toString()) <= getPriorityByVolunteeringType(volunteeringType.toString())){
+                return requests.get(i).getQueueNumber()+1;
             }
         }
-
-
-        int newQueueNumber;
-        if (newQueueNumberIndex < requests.size()) {
-            newQueueNumber = requests.get(newQueueNumberIndex).getQueueNumber();
-            updateQueueNumbers(requests, newQueueNumberIndex, newQueueNumber + 1);
-        } else {
-            newQueueNumber = requests.size() + 1;
-        }
-        return Pair.of(newQueueNumber, requests);
+        throw new CustomException("Error occurred when making queue", HttpStatus.BAD_REQUEST);
     }
 
     private void updateQueueNumbers(List<Aid_Request> requests, int startIndex, int initialQueueNumber) {
         for (int i = startIndex; i < requests.size(); i++) {
-            Aid_Request request = requests.get(i);
-            request.setQueueNumber(initialQueueNumber++);
+            requests.get(i).setQueueNumber(initialQueueNumber++);
+        }
+    }
+
+    private void updateQueueNumber(List<Aid_Request> requests, int startIndex) {
+        for (int i = startIndex-1; i < requests.size(); i++) {
+            int newIndex = requests.get(i).getQueueNumber();
+            requests.get(i).setQueueNumber(newIndex+1);
         }
     }
 
@@ -125,9 +124,9 @@ public class Queue {
         return priority;
     }
 
-
     public int getPriorityByVolunteeringType(String volunteeringType) {
         int priority;
+
         switch (volunteeringType) {
             case "SOCIAL":
                 priority = 1;
@@ -142,6 +141,7 @@ public class Queue {
                 priority = 0; // Default priority if the social status is not recognized
                 break;
         }
+
         return priority;
     }
 
