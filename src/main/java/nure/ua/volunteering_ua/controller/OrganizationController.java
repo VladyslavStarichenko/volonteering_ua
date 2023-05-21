@@ -105,12 +105,12 @@ public class OrganizationController {
 
     @ApiOperation(value = "Update organization")
     @PreAuthorize("hasRole('ROLE_ORGANIZATION_ADMIN')")
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<OrganizationGetDto> updateOrganization(
             @ApiParam(value = "Organization object for updating", required = true)
             @RequestBody OrganizationCreateDto organizationCreateDto) {
         OrganizationGetDto organization = organizationService
-                .createOrganization(organizationCreateDto);
+                .updateOrganization(organizationCreateDto);
         return new ResponseEntity<>(organization, HttpStatus.CREATED);
     }
 }

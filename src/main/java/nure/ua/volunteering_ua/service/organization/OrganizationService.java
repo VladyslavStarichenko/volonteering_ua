@@ -155,6 +155,7 @@ public class OrganizationService {
                     });
             org.setName(organizationCreateDto.getName());
             org.setLocation(location);
+            org.setImageURL(organizationCreateDto.getImageURL());
             org.setVolunteeringType(organizationCreateDto.getVolunteeringType());
             return organizationRepository.save(org);
         }).orElseThrow(() -> new CustomException("Error during updating the organization", HttpStatus.BAD_REQUEST));

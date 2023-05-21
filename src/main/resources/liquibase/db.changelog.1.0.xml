@@ -586,7 +586,7 @@
             <column name="password" value="$2a$10$V003J.CCI6Al4EXozE/EfeHGIysls/i0E62IuJ7fIuEvmpHxAXcLK"/>
             <column name="created" value="2021-09-29 22:54:27.291000"/>
             <column name="status" value="ACTIVE"/>
-            <column name="role_id" value="4"/>
+            <column name="role_id" value="2"/>
             <column name="social_category" value="NO_CATEGORY"/>
         </insert>
 
@@ -642,10 +642,6 @@
             <column name="organization_admin" value="076a697c-2d1f-11ec-8d3d-0242ac130481"/>
         </insert>
 
-        <insert tableName="volunteer">
-            <column name="id" value="1"/>
-            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130017"/>
-        </insert>
 
         <insert tableName="volunteer">
             <column name="id" value="2"/>
@@ -663,19 +659,19 @@
 
         <insert tableName="customer">
             <column name="id" value="1"/>
-            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130015"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130007"/>
             <column name="address" value="456 Elm St"/>
         </insert>
 
         <insert tableName="customer">
             <column name="id" value="2"/>
-            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130088"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130015"/>
             <column name="address" value="452 Elm St"/>
         </insert>
 
         <insert tableName="customer">
             <column name="id" value="3"/>
-            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130098"/>
+            <column name="user_id" value="076a697c-2d1f-11ec-8d3d-0242ac130017"/>
             <column name="address" value="456 Elm St"/>
         </insert>
 

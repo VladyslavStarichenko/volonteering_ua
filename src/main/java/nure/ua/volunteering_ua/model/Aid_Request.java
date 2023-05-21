@@ -8,6 +8,8 @@ import lombok.Setter;
 import nure.ua.volunteering_ua.model.user.Customer;
 import nure.ua.volunteering_ua.model.user.Organization;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -56,11 +58,22 @@ public class Aid_Request {
   @Column(name = "receiving_address")
   private String receivingAddress;
 
+  @CreationTimestamp
   @Column(name = "create_date")
   private Date created_date;
 
+  @UpdateTimestamp
   @Column(name = "update_date")
   private Date updated_date;
 
-
+  public Aid_Request(String title, String description, int amount, Organization organization, Customer customer, VolunteeringType volunteeringType, Request_Status requestStatus, String receivingAddress) {
+    this.title = title;
+    this.description = description;
+    this.amount = amount;
+    this.organization = organization;
+    this.customer = customer;
+    this.volunteeringType = volunteeringType;
+    this.requestStatus = requestStatus;
+    this.receivingAddress = receivingAddress;
+  }
 }

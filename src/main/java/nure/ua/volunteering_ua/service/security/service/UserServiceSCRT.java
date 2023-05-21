@@ -150,7 +150,8 @@ public class UserServiceSCRT {
         return ImmutableMap.of(
                 "username", username,
                 "token", token,
-                "role", user.getRole().getName()
+                "role", user.getRole().getName(),
+                "email", user.getEmail()
         );
     }
 
