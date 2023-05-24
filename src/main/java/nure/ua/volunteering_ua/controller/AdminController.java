@@ -19,9 +19,6 @@ import java.util.Optional;
 @RestController
 @Api(value = "Admin operations")
 @RequestMapping(value = "/admin/")
-//@CrossOrigin(origins = {"http://localhost:3000", "http://someserver:8000"},
-//        methods = {RequestMethod.GET, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.POST},
-//        allowCredentials = "true", maxAge = 3600, allowedHeaders = "*")
 public class AdminController {
 
     private final UserServiceSCRT userServiceSCRT;

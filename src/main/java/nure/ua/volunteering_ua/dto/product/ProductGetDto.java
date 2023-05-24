@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductGetDto {
 
+    private long id;
     private String name;
     private String description;
     private Integer amount;

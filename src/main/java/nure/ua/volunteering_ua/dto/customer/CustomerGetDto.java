@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerGetDto {
 
+    private long id;
     private String name;
     private String email;
     private String address;

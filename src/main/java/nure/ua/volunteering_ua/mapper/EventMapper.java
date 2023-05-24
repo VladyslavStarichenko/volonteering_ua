@@ -19,6 +19,7 @@ public class EventMapper implements Function<Event, EventGetDto> {
     @Override
     public EventGetDto apply(Event event) {
         return new EventGetDto(
+                event.getId(),
                 event.getName(),
                 event.getDescription(),
                 event.getStartDate(),

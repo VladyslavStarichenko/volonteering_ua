@@ -37,9 +37,9 @@ public class OrganizationMapper implements Function<Organization, OrganizationGe
     @Override
     public OrganizationGetDto apply(Organization organization) {
         return new OrganizationGetDto(
+                organization.getId(),
                 organization.getName(),
                 organization.getImageURL() != null ? organization.getImageURL() : "",
-//                Optional.ofNullable(organization.getImageURL()),
                 organization.getOrganization_admin().getUserName(),
                 organization.getVolunteeringType().name(),
                 organization.getSubscribers()

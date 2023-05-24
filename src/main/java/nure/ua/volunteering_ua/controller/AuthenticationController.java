@@ -23,9 +23,6 @@ import java.util.Optional;
 @RestController
 @Api(value = "Authentication operations (login, sign up)")
 @RequestMapping(value = "/auth/")
-//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8000"},
-//        methods = {RequestMethod.GET, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.POST},
-//        allowCredentials = "true", maxAge = 3600, allowedHeaders = "*")
 public class AuthenticationController {
 
     private final UserServiceSCRT userServiceSCRT;

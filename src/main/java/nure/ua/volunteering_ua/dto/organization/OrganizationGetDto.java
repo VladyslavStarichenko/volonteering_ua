@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrganizationGetDto {
 
+    private long id;
     private String name;
     private String imageURL;
     private String admin;

@@ -12,6 +12,7 @@ public class ProductMapper implements Function<Product, ProductGetDto> {
     @Override
     public ProductGetDto apply(Product product) {
         return new ProductGetDto(
+                product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getAmount(),

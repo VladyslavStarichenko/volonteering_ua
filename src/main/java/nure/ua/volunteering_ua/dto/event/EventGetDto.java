@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EventGetDto {
 
+    private long id;
     private String name;
     private String description;
     private Date startDate;

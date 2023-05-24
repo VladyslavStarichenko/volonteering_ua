@@ -12,6 +12,7 @@ public class RequestMapper implements Function<Aid_Request, RequestGetDto> {
     @Override
     public RequestGetDto apply(Aid_Request aid_request) {
         return new RequestGetDto(
+                aid_request.getId(),
                 aid_request.getTitle(),
                 aid_request.getDescription(),
                 aid_request.getAmount(),

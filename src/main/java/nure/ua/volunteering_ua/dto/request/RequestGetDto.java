@@ -13,6 +13,7 @@ import nure.ua.volunteering_ua.model.user.VolunteeringType;
 @NoArgsConstructor
 public class RequestGetDto {
 
+    private long id;
     private String title;
     private String description;
     private int amount;
