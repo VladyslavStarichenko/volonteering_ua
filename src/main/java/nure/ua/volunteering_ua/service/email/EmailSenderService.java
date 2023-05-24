@@ -22,10 +22,11 @@ public class EmailSenderService {
   public void sendMail(
           String toEmail,
           String subject,
-          String body
+          String body,
+          String emailFrom
                        ){
     SimpleMailMessage message = new SimpleMailMessage();
-    message.setFrom("goldsilver1234512345@gmail.com");
+    message.setFrom(emailFrom);
     message.setTo(toEmail);
     message.setText(body);
     message.setSubject(subject);
