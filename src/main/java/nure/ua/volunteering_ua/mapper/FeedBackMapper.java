@@ -11,6 +11,7 @@ public class FeedBackMapper implements Function<Feedback, FeedBackGetDto> {
     @Override
     public FeedBackGetDto apply(Feedback feedback) {
         return new FeedBackGetDto(
+                feedback.getId(),
                 feedback.getComment(),
                 feedback.getCustomer().getUser().getUserName(),
                 feedback.getOrganization().getName(),

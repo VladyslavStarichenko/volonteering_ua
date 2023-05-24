@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FeedBackGetDto {
 
+    private long id;
     private String comment;
     private String customerName;
     private String organizationName;

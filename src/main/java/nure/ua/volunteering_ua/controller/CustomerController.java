@@ -62,7 +62,6 @@ public class CustomerController {
     }
 
     @ApiOperation(value = "Get customer by name")
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("getCustomerByName/{customerName}")
     public ResponseEntity<CustomerGetDto> getCustomerByName(
             @ApiParam(value = "Organization Name")
