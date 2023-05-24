@@ -5,7 +5,6 @@ import nure.ua.volunteering_ua.model.user.Organization;
 
 
 @Data
-
 public class Statistic {
 
     private int requestsCount;
@@ -13,11 +12,20 @@ public class Statistic {
     private String inVerificationRequestsCount;
     private String approvedRequestsCount;
 
+
+
+    public Statistic(int requestsCount, double deliveredCount, double inVerificationRequestsCount,  double approvedRequestsCount) {
+        this.requestsCount = requestsCount;
+        this.deliveredCount = String.valueOf(deliveredCount) + "%";
+        this.inVerificationRequestsCount = String.valueOf(inVerificationRequestsCount) + "%";
+        this.approvedRequestsCount = String.valueOf(approvedRequestsCount) + "%";
+    }
+
     public Statistic() {
         this.requestsCount = 0;
-        this.deliveredCount = 0 + "%";
-        this.inVerificationRequestsCount = 0 + "%";
-        this.approvedRequestsCount = 0 + "%";
+        this.deliveredCount = String.valueOf(0 ) + "%";
+        this.inVerificationRequestsCount = String.valueOf(0) + "%";
+        this.approvedRequestsCount = String.valueOf(0) + "%";
     }
 
     public Statistic getStatistic(Organization organization) {
@@ -33,12 +41,7 @@ public class Statistic {
             approvedStatistics = (double) requestsCount / countApproved * 100;
             verificationStatistics = (double) requestsCount / countVerification * 100;
         }
-        Statistic statistic = new Statistic();
-        statistic.setDeliveredCount(rating + "%");
-        statistic.setRequestsCount(requestsCount);
-        statistic.setApprovedRequestsCount(approvedStatistics + "%");
-        statistic.setInVerificationRequestsCount(verificationStatistics + "%");
-        return statistic;
+        return new Statistic(requestsCount,rating, verificationStatistics, approvedStatistics);
     }
 
     private static int getCountByRequestStatus(Organization organization, Request_Status requestStatus) {
