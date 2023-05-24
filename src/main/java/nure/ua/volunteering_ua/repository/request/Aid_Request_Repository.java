@@ -18,13 +18,16 @@ public interface Aid_Request_Repository extends PagingAndSortingRepository<Aid_R
   List<Aid_Request> getAllByOrganization_Name(String organizationName);
 
   @Query(value = "SELECT * FROM request", nativeQuery = true)
+  List<Aid_Request> getAllRequest();
+
+  @Query(value = "SELECT * FROM request", nativeQuery = true)
   Page<Aid_Request> getAll(Pageable pageable);
 
-  List<Aid_Request> getAid_RequestByCustomer_Id(Long customerId);
+  Page<Aid_Request> getAid_RequestByCustomer_Id(Pageable pageable,Long customerId);
 
   @Modifying
   @Transactional
-  @Query(value = "update request set code=? where id=?", nativeQuery = true)
+  @Query(value = "update request set confirmation_code=? where id=?", nativeQuery = true)
   void update(int code, Long id);
 
   @Modifying
