@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class VolunteerGetDto {
 
+  private long id;
   private String name;
   private String email;
   private List<String> organizations;

@@ -44,6 +44,9 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "organization_admin")
     private Organization organization;
 
+    @OneToOne(mappedBy = "user")
+    private Volunteer volunteer;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "social_category")
     private SocialCategory socialCategory;

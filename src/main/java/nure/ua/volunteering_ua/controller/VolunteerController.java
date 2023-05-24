@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Api(value = "Operations with volunteer")
 @RequestMapping(value = "/volunteer/")
-//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8000"},
-//        methods = {RequestMethod.GET, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.POST},
-//        allowCredentials = "true", maxAge = 3600, allowedHeaders = "*")
 @Slf4j
 public class VolunteerController {
 
@@ -28,31 +25,39 @@ public class VolunteerController {
         this.volunteerService = volunteerService;
     }
 
-    @ApiOperation(value = "Register in organization")
-    @PreAuthorize("hasRole('ROLE_ORGANIZATION_ADMIN')")
-    @PutMapping("register/volunteerName/{volunteerName}")
+
+    @ApiOperation(value = "Register the volunteer in the organization")
+    @PutMapping("register/{volunteerName}")
     public ResponseEntity<String> register(
-            @ApiParam(name = "Username of the volunteer")
-            @PathVariable String volunteerName ) {
+            @ApiParam(value = "Username of the volunteer") @PathVariable String volunteerName
+    ) {
         volunteerService.registerInOrganization(volunteerName);
-        return new ResponseEntity<>("Now volunteer "  + volunteerName +" is a member of volunteering organization",
-                HttpStatus.OK);
+        return new ResponseEntity<>("Now volunteer " + volunteerName + " is a member of volunteering organization", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Unregister in organization")
-    @PreAuthorize("hasRole('ROLE_ORGANIZATION_ADMIN')")
-    @PutMapping("unregister/volunteerName/{volunteerName}")
-    public ResponseEntity<String> unRegister(
-            @ApiParam(name = "Username of the volunteer")
-            @PathVariable String volunteerName)  {
+    @ApiOperation(value = "Unregister the volunteer from the organization")
+    @PutMapping("unregister/{volunteerName}")
+    public ResponseEntity<String> unregister(
+            @ApiParam(value = "Username of the volunteer") @PathVariable String volunteerName
+    ) {
         volunteerService.unRegisterInOrganization(volunteerName);
-        return new ResponseEntity<>("You're successfully unregistered", HttpStatus.OK);
+        return new ResponseEntity<>("Now volunteer " + volunteerName + " is not a member of volunteering organization", HttpStatus.OK);
     }
+
 
     @ApiOperation(value = "My account")
     @PreAuthorize("hasRole('ROLE_VOLUNTEER')")
-    @GetMapping("myAccount")
+    @GetMapping("/myAccount/")
     public ResponseEntity<VolunteerGetDto> myAccount() {
         return new ResponseEntity<>(volunteerService.getMyAccount(), HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "Get volunteer by name")
+    @GetMapping("/{volunteerName}")
+    public ResponseEntity<VolunteerGetDto> getVolunteerByName(
+            @ApiParam(value = "Volunteer name") @PathVariable String volunteerName
+    ) {
+        return new ResponseEntity<>(volunteerService.getVolunteerByName(volunteerName), HttpStatus.OK);
     }
 }
