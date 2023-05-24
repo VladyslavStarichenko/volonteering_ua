@@ -14,6 +14,7 @@ public class VolunteeringMapper implements Function<Volunteer, VolunteerGetDto> 
     @Override
     public VolunteerGetDto apply(Volunteer volunteer) {
         return new VolunteerGetDto(
+                volunteer.getId(),
                 volunteer.getUser().getUserName(),
                 volunteer.getUser().getEmail(),
                 volunteer.getVolunteering_area().stream()
