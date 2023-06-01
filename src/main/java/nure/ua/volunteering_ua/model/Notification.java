@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nure.ua.volunteering_ua.model.user.Customer;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Getter
@@ -27,10 +29,17 @@ public class Notification {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    private String title;
+
     private String message;
 
-    public Notification(Customer customer, String message) {
+    @CreationTimestamp
+    @Column(name = "created")
+    private Date createdAt;
+
+    public Notification(Customer customer, String message, String title) {
         this.customer = customer;
         this.message = message;
+        this.title = title;
     }
 }

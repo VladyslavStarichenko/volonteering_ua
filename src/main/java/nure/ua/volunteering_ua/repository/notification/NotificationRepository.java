@@ -2,6 +2,8 @@ package nure.ua.volunteering_ua.repository.notification;
 
 import nure.ua.volunteering_ua.model.Notification;
 import nure.ua.volunteering_ua.model.user.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +13,6 @@ import java.util.List;
 public interface NotificationRepository extends PagingAndSortingRepository<Notification, Long> {
 
   List<Notification> getNotificationByCustomer(Customer customer);
+
+  Page<Notification> findAllByCustomer(Pageable pageable, Customer customer);
 }
