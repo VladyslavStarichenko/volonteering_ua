@@ -1,6 +1,6 @@
 package nure.ua.volunteering_ua.mapper;
 
-import nure.ua.volunteering_ua.dto.LocationDto;
+import nure.ua.volunteering_ua.dto.location.LocationDto;
 import nure.ua.volunteering_ua.model.user.Location;
 import org.springframework.stereotype.Service;
 

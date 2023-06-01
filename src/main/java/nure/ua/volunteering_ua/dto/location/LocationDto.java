@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.dto;
+package nure.ua.volunteering_ua.dto.location;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

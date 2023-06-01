@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface LocationRepository extends PagingAndSortingRepository<Location, Long> {
     Optional<Location> getLocationsByAddress(String address);
+
 }
