@@ -1,10 +1,13 @@
 package nure.ua.volunteering_ua.model;
 
 import lombok.*;
+import nure.ua.volunteering_ua.dto.event.EventCreateDto;
+import nure.ua.volunteering_ua.model.user.Customer;
 import nure.ua.volunteering_ua.model.user.Location;
 import nure.ua.volunteering_ua.model.user.Organization;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,8 +41,34 @@ public class Event extends BaseEntity {
     @OneToMany(mappedBy = "event_warehouse")
     private List<Product> products;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
+
+    @ManyToMany(mappedBy = "events")
+    private List<Customer> customers;
+
+    private int capacity;
+
+    public Event(EventCreateDto eventCreateDto){
+        super(System_Status.ACTIVE);
+        this.name = eventCreateDto.getName();
+        this.description = eventCreateDto.getDescription();
+        this.startDate = eventCreateDto.getStartDate();
+        this.endDate = eventCreateDto.getEndDate();
+        this.products = new ArrayList<>();
+        this.location = new Location(eventCreateDto.getLocation());
+        this.customers = new ArrayList<>();
+        this.capacity =  eventCreateDto.getCapacity();
+    }
+
+    public void addParticipant(Customer customer){
+         this.customers.add(customer);
+    }
+
+    public void removeParticipant(Customer customer){
+         this.customers.add(customer);
+    }
+
 
 }

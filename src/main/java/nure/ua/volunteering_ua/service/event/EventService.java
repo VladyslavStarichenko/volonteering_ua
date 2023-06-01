@@ -1,4 +1,164 @@
 package nure.ua.volunteering_ua.service.event;
 
+import nure.ua.volunteering_ua.dto.event.EventPageResponse;
+import nure.ua.volunteering_ua.dto.location.LocationDto;
+import nure.ua.volunteering_ua.dto.event.EventCreateDto;
+import nure.ua.volunteering_ua.dto.event.EventGetDto;
+import nure.ua.volunteering_ua.exeption.CustomException;
+import nure.ua.volunteering_ua.mapper.EventMapper;
+import nure.ua.volunteering_ua.mapper.EventPageMapper;
+import nure.ua.volunteering_ua.model.Event;
+import nure.ua.volunteering_ua.model.user.Customer;
+import nure.ua.volunteering_ua.model.user.Location;
+import nure.ua.volunteering_ua.model.user.Organization;
+import nure.ua.volunteering_ua.repository.event.EventRepository;
+import nure.ua.volunteering_ua.repository.location.LocationRepository;
+import nure.ua.volunteering_ua.service.customer.CustomerService;
+import nure.ua.volunteering_ua.service.notification.NotificationService;
+import nure.ua.volunteering_ua.service.organization.OrganizationService;
+import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+@Service
 public class EventService {
+
+    private final EventRepository eventRepository;
+    private final LocationRepository locationRepository;
+    private final OrganizationService organizationService;
+    private final NotificationService notificationService;
+    private final CustomerService customerService;
+    private final EventMapper eventMapper;
+
+    private final EventPageMapper eventPageMapper;
+
+    private final UserServiceSCRT userServiceSCRT;
+
+    @Autowired
+    public EventService(EventRepository eventRepository, LocationRepository locationRepository, OrganizationService organizationService, NotificationService notificationService, CustomerService customerService, EventMapper eventMapper, EventPageMapper eventPageMapper, UserServiceSCRT userServiceSCRT) {
+        this.eventRepository = eventRepository;
+        this.locationRepository = locationRepository;
+        this.organizationService = organizationService;
+        this.notificationService = notificationService;
+        this.customerService = customerService;
+        this.eventMapper = eventMapper;
+        this.eventPageMapper = eventPageMapper;
+        this.userServiceSCRT = userServiceSCRT;
+    }
+
+    public EventGetDto createEvent(EventCreateDto eventCreateDto) {
+        Event event = new Event(eventCreateDto);
+        String message = "A new event " + event.getName() + " comes.\n" +
+                "Description: " + event.getDescription() +
+                "\n Dates: " + event.getStartDate() + " - " + event.getEndDate() +
+                "\n Capacity: " + event.getCapacity();
+
+        String topic = "New event comes.";
+        event.setLocation(checkLocation(eventCreateDto.getLocation()));
+        Organization eventOrganization = getEventOrganization(userServiceSCRT.getCurrentLoggedInUser().getOrganization().getName());
+        event.setOrganization(eventOrganization);
+        notificationService.createEventNotification(eventOrganization.getSubscribers(), message, topic);
+        return eventMapper.apply(eventRepository.save(event));
+    }
+
+    public EventGetDto updateEvent(Long eventID, EventCreateDto eventCreateDto) {
+
+        Event event = eventRepository.findById(eventID)
+                .orElseThrow(() -> new CustomException("There is no event with specified Id", HttpStatus.NOT_FOUND));
+        event.setLocation(checkLocation(eventCreateDto.getLocation()));
+        event.setOrganization(getEventOrganization(userServiceSCRT.getCurrentLoggedInUser().getOrganization().getName()));
+        event.setDescription(eventCreateDto.getDescription());
+        event.setStartDate(eventCreateDto.getStartDate());
+        event.setEndDate(eventCreateDto.getEndDate());
+        String message = "An event " + event.getName() + " has changed.\n" +
+                "Description: " + event.getDescription() +
+                "\n Dates: " + event.getStartDate() + " - " + event.getEndDate() +
+                "\n Capacity: " + event.getCapacity();
+        String topic = "Event data changed.";
+        notificationService.createEventNotification(event.getOrganization().getSubscribers(), message, topic);
+        return eventMapper.apply(eventRepository.save(event));
+    }
+
+    public Location checkLocation(LocationDto locationDto) {
+        return locationRepository
+                .getLocationsByAddress(locationDto.getAddress())
+                .orElseGet(() -> locationRepository.save(new Location(locationDto)));
+    }
+
+    public Organization getEventOrganization(String organizationName) {
+        return organizationService.getOrganizationByNameInternalUsage(organizationName);
+    }
+
+    public EventGetDto participate(String customerName, Long eventId) {
+        Customer customer = customerService.getCustomerByNameInternal(customerName);
+        Event event = getEventByIdInternal(eventId);
+        if (participationCheck(customer, event) && event.getCapacity() > 0) {
+            throw new CustomException("Provided customer is already participating.", HttpStatus.BAD_REQUEST);
+        } else {
+            if(event.getCapacity()==0){
+                throw new CustomException("There is no place left", HttpStatus.BAD_REQUEST);
+            }
+            else {
+                event.addParticipant(customer);
+                event.setCapacity(event.getCapacity() - 1);
+                eventRepository.participate(customer.getId(), event.getId());
+                return eventMapper.apply(eventRepository.save(event));
+
+            }
+        }
+    }
+
+    public EventGetDto unParticipate(String customerName, Long eventId) {
+        Customer customer = customerService.getCustomerByNameInternal(customerName);
+        Event event = getEventByIdInternal(eventId);
+        if (!participationCheck(customer, event)) {
+            throw new CustomException("Provided customer is not a participant.", HttpStatus.BAD_REQUEST);
+        } else {
+            event.removeParticipant(customer);
+            event.setCapacity(event.getCapacity() + 1);
+            eventRepository.unparticipate(customer.getId(),event.getId());
+            return eventMapper.apply(eventRepository.save(event));
+        }
+    }
+
+    private boolean participationCheck(Customer customer, Event event) {
+
+        return event.getCustomers()
+                .stream()
+                .anyMatch(c -> c.getUser().getId().equals(customer.getUser().getId()));
+    }
+
+    public Event getEventByIdInternal(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new CustomException("There is no event with provided ID", HttpStatus.NOT_FOUND));
+    }
+
+    public List<Event> getAllEventsInternal() {
+        return eventRepository.getAllEvents();
+    }
+
+    public EventPageResponse getAllEvents(int pageNumber, int sizeOfPage) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
+        return eventPageMapper.apply(eventRepository.getAllEventsPage(pageable));
+    }
+
+    public EventPageResponse getAllEventsByOrganization(int pageNumber, int sizeOfPage, String organizationName) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
+        return eventPageMapper.apply(eventRepository.getAllByOrganization_Name(pageable, organizationName));
+    }
+
+    public EventPageResponse getAllEventsByCustomerId(int pageNumber, int sizeOfPage, Long customerId) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
+        return eventPageMapper.apply(eventRepository.getAllByCustomerId(pageable, customerId));
+    }
+
+    public EventGetDto getEventById(Long id){
+        return eventMapper.apply(getEventByIdInternal(id));
+    }
+
+
 }

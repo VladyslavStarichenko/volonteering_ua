@@ -14,7 +14,11 @@ public class EventMapper implements Function<Event, EventGetDto> {
 
     @Autowired
     private ProductMapper productMapper;
-    @Autowired LocationMapper locationMapper;
+    @Autowired
+    private LocationMapper locationMapper;
+
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @Override
     public EventGetDto apply(Event event) {
@@ -28,9 +32,15 @@ public class EventMapper implements Function<Event, EventGetDto> {
                         .stream()
                         .map(productMapper)
                         .collect(Collectors.toList()),
+                event.getCustomers()
+                                .stream()
+                        .map(customerMapper)
+                                .collect(Collectors.toList()),
                 Stream.of(event.getLocation())
                         .map(locationMapper)
-                        .findFirst().get()
+                        .findFirst().get(),
+                event.getCapacity(),
+                event.getOrganization().getName()
 
         );
     }
