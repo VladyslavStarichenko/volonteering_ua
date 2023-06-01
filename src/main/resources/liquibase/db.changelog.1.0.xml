@@ -123,14 +123,21 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="title" type="VARCHAR(255)"/>
 
-            <column name="message" type="VARCHAR(255)" >
+
+            <column name="message" type="VARCHAR(1000)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="now()">
                 <constraints nullable="false"/>
             </column>
 
             <column name="customer_id" type="BIGINT" >
                 <constraints nullable="false"/>
             </column>
+
         </createTable>
 
             <addForeignKeyConstraint baseColumnNames="customer_id"
@@ -159,6 +166,11 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
             <column name="volunteering_type" type="VARCHAR(25)" defaultValue="ACTIVE">
             </column>
             <column name="location_id" type="bigint">
@@ -166,6 +178,16 @@
             </column>
             <column name="organization_admin" type="uuid">
                 <constraints nullable="false"/>
+            </column>
+
+            <column name="stripe_api_key" type="VARCHAR(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stripe_public_key" type="VARCHAR(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stripe_secret_key" type="VARCHAR(500)">
+                <constraints nullable="true"/>
             </column>
         </createTable>
 
@@ -218,6 +240,10 @@
             <column name="location_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="capacity" type="INT">
+            </column>
+
             
             <column name="organization_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -336,6 +362,8 @@
 
         </createTable>
 
+
+
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="volunteer"
                                  constraintName="fk_user_volunteer"
@@ -370,6 +398,32 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="organization"/>
+
+        <createTable tableName="participation">
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="participation"
+                                 constraintName="fk_customer_event"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"/>
+
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="participation"
+                                 constraintName="fk_event_customer"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="event"/>
     </changeSet>
 
     <changeSet id="1.0.5" author="goldsilver12">
@@ -628,6 +682,9 @@
             <column name="volunteering_type" value="SOCIAL"/>
             <column name="location_id" valueNumeric="1"/>
             <column name="organization_admin" value="076a697c-2d1f-11ec-8d3d-0242ac130435"/>
+            <column name="stripe_api_key" value="sk_test_51K470nA5ndul63ktyBYadvRoCFKtAUeNtbcZNQ3LWtGFgErJPNjT2kMiZcWaDzcEsW1JlQEpItJ3KOymj8rGSS4o00t1EZrS5d"/>
+            <column name="stripe_public_key" value="pk_test_51K470nA5ndul63kt012jwvJexZhe3CrGJBPzzL1gOE0hGMgTK4fkggf5mriFzOoqlw7rp6Eau04wXfiGfFS8w4Jb006FYxkKtM"/>
+            <column name="stripe_secret_key" value="sk_test_51K470nA5ndul63ktyBYadvRoCFKtAUeNtbcZNQ3LWtGFgErJPNjT2kMiZcWaDzcEsW1JlQEpItJ3KOymj8rGSS4o00t1EZrS5d"/>
         </insert>
 
         <insert tableName="organization">
@@ -677,18 +734,21 @@
 
         <insert tableName="notification">
             <column name="id" value="1"/>
+            <column name="title" value="sample title"/>
             <column name="message" value="Notification message"/>
             <column name="customer_id" value="1"/>
         </insert>
 
         <insert tableName="notification">
             <column name="id" value="2"/>
+            <column name="title" value="sample title2"/>
             <column name="message" value="Notification message"/>
             <column name="customer_id" value="2"/>
         </insert>
 
         <insert tableName="notification">
             <column name="id" value="3"/>
+            <column name="title" value="sample title3"/>
             <column name="message" value="Notification message"/>
             <column name="customer_id" value="2"/>
         </insert>
