@@ -39,6 +39,13 @@ public class CustomerService {
                 .orElseThrow(() -> new CustomException("There is no customer account associated with the current user", HttpStatus.NOT_FOUND));
     }
 
+
+    public Customer getCurrentLoggedInCustomerInternal() {
+        return customerRepository
+                .findByUser(userServiceSCRT.getCurrentLoggedInUser())
+                .orElseThrow(() -> new CustomException("There is no customer account associated with the current user", HttpStatus.NOT_FOUND));
+    }
+
     public CustomerGetDto getCustomerByName(String username) {
         return customerRepository
                 .findCustomerByUser_UserName(username)
@@ -46,11 +53,18 @@ public class CustomerService {
                 .orElseThrow(() -> new CustomException("There is no customer account associated with the name provided", HttpStatus.NOT_FOUND));
     }
 
+
+    public Customer getCustomerByNameInternal(String username) {
+        return customerRepository
+                .findCustomerByUser_UserName(username)
+                .orElseThrow(() -> new CustomException("There is no customer account associated with the name provided", HttpStatus.NOT_FOUND));
+    }
+
     public void subscribeOrganization(String organizationName) {
         customerRepository.findByUser(userServiceSCRT.getCurrentLoggedInUser())
                 .ifPresent(customer -> organizationRepository.getOrganizationByName(organizationName)
                         .ifPresent(organization -> {
-                            customer.getSubscriptions().add(organization);
+                            customer.subscribe(organization);
                             customerRepository.save(customer);
                         }));
     }
@@ -59,12 +73,8 @@ public class CustomerService {
         customerRepository.findByUser(userServiceSCRT.getCurrentLoggedInUser())
                 .ifPresent(customer -> organizationRepository.getOrganizationByName(organizationName)
                         .ifPresent(organization -> {
-                            customer.getSubscriptions().remove(organization);
+                            customer.unsubscribe(organization);
                             customerRepository.save(customer);
                         }));
     }
-
-
-
-
 }
