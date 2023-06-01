@@ -40,6 +40,7 @@ public class OrganizationMapper implements Function<Organization, OrganizationGe
                 organization.getId(),
                 organization.getName(),
                 organization.getImageURL() != null ? organization.getImageURL() : "",
+                organization.getDescription(),
                 organization.getOrganization_admin().getUserName(),
                 organization.getVolunteeringType().name(),
                 organization.getSubscribers()

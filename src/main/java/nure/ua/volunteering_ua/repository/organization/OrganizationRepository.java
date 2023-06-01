@@ -4,10 +4,12 @@ package nure.ua.volunteering_ua.repository.organization;
 import nure.ua.volunteering_ua.model.user.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,5 +42,8 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
 
   boolean existsByName(String name);
 
-
+  @Modifying
+  @Transactional
+  @Query(value = "update organization set stripe_api_key=?, stripe_public_key=?, stripe_secret_key=? where id=?", nativeQuery = true)
+  public void updatePaymentMethod(String stripe_api_key, String stripe_public_key, String stripe_secret_key, Long id);
 }

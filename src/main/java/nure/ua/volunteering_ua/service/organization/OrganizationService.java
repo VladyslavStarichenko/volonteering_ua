@@ -7,16 +7,15 @@ import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.mapper.organization.OrganizationMapper;
 import nure.ua.volunteering_ua.mapper.organization.OrganizationPageMapper;
 import nure.ua.volunteering_ua.model.Statistic;
-import nure.ua.volunteering_ua.model.user.Location;
-import nure.ua.volunteering_ua.model.user.Organization;
-import nure.ua.volunteering_ua.model.user.User;
-import nure.ua.volunteering_ua.model.user.VolunteeringType;
+import nure.ua.volunteering_ua.model.user.*;
 import nure.ua.volunteering_ua.repository.location.LocationRepository;
 import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
+import nure.ua.volunteering_ua.service.customer.CustomerService;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +31,17 @@ public class OrganizationService {
     private final OrganizationPageMapper organizationPageMapper;
     private final LocationRepository locationRepository;
 
+    private final CustomerService customerService;
+
 
     @Autowired
-    public OrganizationService(OrganizationRepository organizationRepository, UserServiceSCRT userServiceSCRT, OrganizationMapper organizationMapper, OrganizationPageMapper organizationPageMapper, LocationRepository locationRepository) {
+    public OrganizationService(OrganizationRepository organizationRepository, UserServiceSCRT userServiceSCRT, OrganizationMapper organizationMapper, OrganizationPageMapper organizationPageMapper, LocationRepository locationRepository, CustomerService customerService) {
         this.organizationRepository = organizationRepository;
         this.userServiceSCRT = userServiceSCRT;
         this.organizationMapper = organizationMapper;
         this.organizationPageMapper = organizationPageMapper;
         this.locationRepository = locationRepository;
+        this.customerService = customerService;
     }
 
     public OrganizationGetDto createOrganization(OrganizationCreateDto organizationCreateDto) {
@@ -48,6 +50,7 @@ public class OrganizationService {
         User admin = getOrganizationAdmin();
         Organization organization = new Organization(
                 organizationCreateDto.getName(),
+                organizationCreateDto.getDescription(),
                 organizationCreateDto.getVolunteeringType(),
                 admin,
                 locationDb
@@ -88,6 +91,14 @@ public class OrganizationService {
                 );
     }
 
+    public Organization getOrganizationByNameInternalUsage(String name) {
+        return organizationRepository.getOrganizationByName(name)
+                .orElseThrow(() -> new CustomException(
+                        "Organization with name " + name + "is not found",
+                        HttpStatus.NOT_FOUND)
+                );
+    }
+
     public List<OrganizationGetDto> getOrganizationByType(VolunteeringType type) {
         List<Organization> organizations = organizationRepository.getAllByVolunteering_type(type.toString());
         return Optional.ofNullable(organizations)
@@ -122,8 +133,8 @@ public class OrganizationService {
                         "Organization not found for admin with id " + organizationAdmin.getId(), HttpStatus.NOT_FOUND));
     }
 
-    public OrganizationPageResponse getAllOrganizations(int pageNumber, int sizeOfPage) {
-        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
+    public OrganizationPageResponse getAllOrganizations(int pageNumber, int sizeOfPage, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
         return organizationPageMapper.apply(organizationRepository.findAll(pageable));
     }
 
@@ -138,6 +149,16 @@ public class OrganizationService {
     public List<OrganizationGetDto> getOrganizationByCustomer() {
         return organizationRepository
                 .getAllByCustomer(userServiceSCRT.getCurrentLoggedInUser().getId())
+                .stream()
+                .map(organizationMapper)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<OrganizationGetDto> getOrganizationByCustomerName(String customerUserName) {
+        Customer customer = customerService.getCustomerByNameInternal(customerUserName);
+        return organizationRepository
+                .getAllByCustomer(customer.getUser().getId())
                 .stream()
                 .map(organizationMapper)
                 .collect(Collectors.toList());

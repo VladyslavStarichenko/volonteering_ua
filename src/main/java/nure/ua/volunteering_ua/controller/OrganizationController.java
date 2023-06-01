@@ -43,7 +43,7 @@ public class OrganizationController {
     @ApiOperation(value = "Get volunteering organization by name")
     @GetMapping("name/{organizationName}")
     public ResponseEntity<OrganizationGetDto> getOrganizationByName(@PathVariable String organizationName) {
-        return new ResponseEntity<>( organizationService.getOrganizationByName(organizationName), HttpStatus.OK);
+        return new ResponseEntity<>(organizationService.getOrganizationByName(organizationName), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get volunteering organizations by volunteer")
@@ -68,18 +68,23 @@ public class OrganizationController {
 
     @ApiOperation(value = "Get volunteering organizations by volunteering type")
     @GetMapping("/volunteeringType/{volunteeringType}")
-    public ResponseEntity<List<OrganizationGetDto>> getOrganizationsByVolunteeringType( @PathVariable VolunteeringType volunteeringType) {
+    public ResponseEntity<List<OrganizationGetDto>> getOrganizationsByVolunteeringType(@PathVariable VolunteeringType volunteeringType) {
         return new ResponseEntity<>(organizationService.getOrganizationByType(volunteeringType), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get all volunteering organizations")
-    @GetMapping("/allOrganizations/{pageNumber}/{pageSize}")
+    @GetMapping("/allOrganizations/{pageNumber}/{pageSize}/{sortBy}")
     public ResponseEntity<OrganizationPageResponse> getAllOrganizations(
             @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
-            @ApiParam(value = "Page size") @PathVariable int pageSize
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by parameter")  @PathVariable(required = false) String sortBy
+
     ) {
+        if (sortBy.isBlank()) {
+            sortBy = "volunteeringType";
+        }
         return new ResponseEntity<>(organizationService
-                .getAllOrganizations(pageNumber, pageSize), HttpStatus.OK);
+                .getAllOrganizations(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete my Organizations")

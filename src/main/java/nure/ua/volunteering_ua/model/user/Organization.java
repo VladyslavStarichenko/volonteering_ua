@@ -29,6 +29,9 @@ public class Organization extends BaseEntity {
     @Column(name = "volunteering_type")
     private VolunteeringType volunteeringType;
 
+
+    private String description;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "organization_admin", referencedColumnName = "id")
     private User organization_admin;
@@ -55,20 +58,23 @@ public class Organization extends BaseEntity {
     @OneToMany(mappedBy = "organization")
     private List<Feedback> feedbacks;
 
-//    private String balance;
-//    private String stripe_api_key;
-//    private String stripe_public_key;
-//    private String stripe_secret_key;
-//    private List<Transactions> transactions;
+    @Column(name = "stripe_api_key")
+    private String stripe_api_key;
+    @Column(name = "stripe_public_key")
+    private String stripe_public_key;
+    @Column(name = "stripe_secret_key")
+    private String stripe_secret_key;
 
     public Organization(
             String name,
+            String description,
             VolunteeringType volunteeringType,
             User organization_admin,
             Location location
     ) {
         super(System_Status.ACTIVE);
         this.name = name;
+        this.description = description;
         this.volunteeringType = volunteeringType;
         this.organization_admin = organization_admin;
         this.location = location;
