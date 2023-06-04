@@ -13,6 +13,7 @@ import nure.ua.volunteering_ua.mapper.VolunteeringMapper;
 import nure.ua.volunteering_ua.model.System_Status;
 import nure.ua.volunteering_ua.model.user.*;
 import nure.ua.volunteering_ua.repository.customer.CustomerRepository;
+import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
 import nure.ua.volunteering_ua.repository.role.RoleRepository;
 import nure.ua.volunteering_ua.repository.user.UserRepository;
 import nure.ua.volunteering_ua.repository.volunteer.VolunteerRepository;
@@ -147,12 +148,43 @@ public class UserServiceSCRT {
         log.info("IN signIn - user: {} successfully signedIN", userRepository.findUserByUserName(username));
         String token = jwtTokenProvider.createToken(username, new ArrayList<>(Collections.singletonList(user.getRole())));
 
-        return ImmutableMap.of(
-                "username", username,
-                "token", token,
-                "role", user.getRole().getName(),
-                "email", user.getEmail()
-        );
+        if(user.getRole().getName().equals("ROLE_VOLUNTEER")){
+            Volunteer volunteer = volunteerRepository.getByUser_UserName(user.getUserName()).orElseThrow(
+                    () -> new CustomException("There is an error with login in", HttpStatus.BAD_REQUEST)
+            );
+            return ImmutableMap.of(
+                    "volunteer_id", volunteer.getId(),
+                    "username", username,
+                    "token", token,
+                    "role", user.getRole().getName(),
+                    "email", user.getEmail()
+            );
+        }
+        else if(user.getRole().getName().equals("ROLE_CUSTOMER")){
+            Customer customer = customerRepository.findByUser(user).orElseThrow(
+                    () -> new CustomException("There is an error with login in", HttpStatus.BAD_REQUEST)
+            );
+            return ImmutableMap.of(
+                    "customer", customer.getId(),
+                    "username", username,
+                    "token", token,
+                    "role", user.getRole().getName(),
+                    "email", user.getEmail()
+            );
+        }
+
+        else{
+            return ImmutableMap.of(
+                    "volunteer_id", user.getId(),
+                    "username", username,
+                    "token", token,
+                    "role", user.getRole().getName(),
+                    "email", user.getEmail());
+        }
+
+
+
+
     }
 
     public User getCurrentLoggedInUser() {
@@ -162,6 +194,8 @@ public class UserServiceSCRT {
                         "User with username: " + username + " wasn't found, you should authorize firstly"
                 ));
     }
+
+
 
 
 }

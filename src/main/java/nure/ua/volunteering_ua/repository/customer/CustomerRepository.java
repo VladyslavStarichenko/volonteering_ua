@@ -22,5 +22,7 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
   @Query(value = "SELECT * FROM customer c WHERE c.id IN " +
           "(SELECT p.customer_id FROM participation p WHERE p.event_id = ?2) ", nativeQuery = true )
   Page<Customer> findAllParticipants(Pageable pageable, Long eventId);
+
+  Optional<Customer> findCustomerById(Long id);
 }
 

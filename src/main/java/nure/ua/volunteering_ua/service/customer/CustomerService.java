@@ -46,6 +46,11 @@ public class CustomerService {
                 .orElseThrow(() -> new CustomException("There is no customer account associated with the current user", HttpStatus.NOT_FOUND));
     }
 
+    public Customer getCustomerByIdInternal(Long id) {
+        return customerRepository
+                .findCustomerById(id)
+                .orElseThrow(() -> new CustomException("There is no customer account associated with the id provided", HttpStatus.NOT_FOUND));
+    }
     public CustomerGetDto getCustomerByName(String username) {
         return customerRepository
                 .findCustomerByUser_UserName(username)

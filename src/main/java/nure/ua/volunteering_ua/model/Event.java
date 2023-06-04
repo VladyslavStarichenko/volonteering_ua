@@ -67,7 +67,7 @@ public class Event extends BaseEntity {
     }
 
     public void removeParticipant(Customer customer){
-         this.customers.add(customer);
+         this.customers.remove(customer);
     }
 
 

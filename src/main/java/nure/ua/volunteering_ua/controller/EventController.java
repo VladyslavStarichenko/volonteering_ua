@@ -4,10 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.event.EventCreateDto;
 import nure.ua.volunteering_ua.dto.event.EventGetDto;
 import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.service.event.EventService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +64,7 @@ public class EventController {
     @ApiOperation(value = "Participate the event")
     @PreAuthorize("hasAnyRole('ROLE_CUSTOMER')")
     @PutMapping("/participate/{customerName}/event/{eventId}")
-    public ResponseEntity<EventGetDto> participate(
+    public ResponseEntity<Pair<CustomerGetDto, Integer>> participate(
             @ApiParam(value = "Customer name") @PathVariable String customerName,
             @ApiParam(value = "Event id") @PathVariable Long eventId) {
         return new ResponseEntity<>(eventService.participate(customerName, eventId), HttpStatus.CREATED);
@@ -70,11 +72,11 @@ public class EventController {
 
     @ApiOperation(value = "Unparticipate the event")
     @PreAuthorize("hasAnyRole('ROLE_CUSTOMER')")
-    @PutMapping("/un-participate/{customerName}/event/{eventId}")
-    public ResponseEntity<EventGetDto> unParticipate(
-            @ApiParam(value = "Customer name") @PathVariable String customerName,
+    @PutMapping("/un-participate/{customerId}/event/{eventId}")
+    public ResponseEntity<Pair<CustomerGetDto, Integer>> unParticipate(
+            @ApiParam(value = "Customer id") @PathVariable Long customerId,
             @ApiParam(value = "Event id") @PathVariable Long eventId) {
-        return new ResponseEntity<>(eventService.unParticipate(customerName, eventId), HttpStatus.CREATED);
+        return new ResponseEntity<>(eventService.unParticipate(customerId, eventId), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Get all events")

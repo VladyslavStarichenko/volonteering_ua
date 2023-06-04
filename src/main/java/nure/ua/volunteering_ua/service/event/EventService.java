@@ -1,10 +1,12 @@
 package nure.ua.volunteering_ua.service.event;
 
+import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.dto.location.LocationDto;
 import nure.ua.volunteering_ua.dto.event.EventCreateDto;
 import nure.ua.volunteering_ua.dto.event.EventGetDto;
 import nure.ua.volunteering_ua.exeption.CustomException;
+import nure.ua.volunteering_ua.mapper.CustomerMapper;
 import nure.ua.volunteering_ua.mapper.EventMapper;
 import nure.ua.volunteering_ua.mapper.EventPageMapper;
 import nure.ua.volunteering_ua.model.Event;
@@ -17,6 +19,7 @@ import nure.ua.volunteering_ua.service.customer.CustomerService;
 import nure.ua.volunteering_ua.service.notification.NotificationService;
 import nure.ua.volunteering_ua.service.organization.OrganizationService;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,9 +40,10 @@ public class EventService {
     private final EventPageMapper eventPageMapper;
 
     private final UserServiceSCRT userServiceSCRT;
+    private final CustomerMapper customerMapper;
 
     @Autowired
-    public EventService(EventRepository eventRepository, LocationRepository locationRepository, OrganizationService organizationService, NotificationService notificationService, CustomerService customerService, EventMapper eventMapper, EventPageMapper eventPageMapper, UserServiceSCRT userServiceSCRT) {
+    public EventService(EventRepository eventRepository, LocationRepository locationRepository, OrganizationService organizationService, NotificationService notificationService, CustomerService customerService, EventMapper eventMapper, EventPageMapper eventPageMapper, UserServiceSCRT userServiceSCRT, CustomerMapper customerMapper) {
         this.eventRepository = eventRepository;
         this.locationRepository = locationRepository;
         this.organizationService = organizationService;
@@ -48,6 +52,7 @@ public class EventService {
         this.eventMapper = eventMapper;
         this.eventPageMapper = eventPageMapper;
         this.userServiceSCRT = userServiceSCRT;
+        this.customerMapper = customerMapper;
     }
 
     public EventGetDto createEvent(EventCreateDto eventCreateDto) {
@@ -93,10 +98,10 @@ public class EventService {
         return organizationService.getOrganizationByNameInternalUsage(organizationName);
     }
 
-    public EventGetDto participate(String customerName, Long eventId) {
+    public Pair<CustomerGetDto, Integer> participate(String customerName, Long eventId) {
         Customer customer = customerService.getCustomerByNameInternal(customerName);
         Event event = getEventByIdInternal(eventId);
-        if (participationCheck(customer, event) && event.getCapacity() > 0) {
+        if (participationCheck(customer, event) || event.getCapacity() < 0) {
             throw new CustomException("Provided customer is already participating.", HttpStatus.BAD_REQUEST);
         } else {
             if(event.getCapacity()==0){
@@ -106,14 +111,15 @@ public class EventService {
                 event.addParticipant(customer);
                 event.setCapacity(event.getCapacity() - 1);
                 eventRepository.participate(customer.getId(), event.getId());
-                return eventMapper.apply(eventRepository.save(event));
+                eventRepository.save(event);
+                return Pair.of(customerMapper.apply(customer), event.getCapacity());
 
             }
         }
     }
 
-    public EventGetDto unParticipate(String customerName, Long eventId) {
-        Customer customer = customerService.getCustomerByNameInternal(customerName);
+    public Pair<CustomerGetDto, Integer> unParticipate(Long customerId, Long eventId) {
+        Customer customer = customerService.getCustomerByIdInternal(customerId);
         Event event = getEventByIdInternal(eventId);
         if (!participationCheck(customer, event)) {
             throw new CustomException("Provided customer is not a participant.", HttpStatus.BAD_REQUEST);
@@ -121,7 +127,8 @@ public class EventService {
             event.removeParticipant(customer);
             event.setCapacity(event.getCapacity() + 1);
             eventRepository.unparticipate(customer.getId(),event.getId());
-            return eventMapper.apply(eventRepository.save(event));
+            eventMapper.apply(eventRepository.save(event));
+            return Pair.of(customerMapper.apply(customer), event.getCapacity());
         }
     }
 
