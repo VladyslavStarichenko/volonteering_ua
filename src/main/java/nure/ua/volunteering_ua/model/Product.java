@@ -10,6 +10,7 @@ import lombok.Setter;
 import nure.ua.volunteering_ua.model.user.Organization;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -37,7 +38,22 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "organization_id",nullable = false)
     private Organization organization_warehouse;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event_warehouse;
+
+    public Product(System_Status status, String name, String description, Integer amount, String image, Organization organization_warehouse) {
+        super(status);
+        this.name = name;
+        this.description = description;
+        this.amount = amount;
+        this.image = image;
+        this.organization_warehouse = organization_warehouse;
+    }
+
+    public Product(String name, String description, Integer amount, String image, Organization organization_warehouse) {
+        this.name = name;
+        this.description = description;
+        this.amount = amount;
+        this.image = image;
+        this.organization_warehouse = organization_warehouse;
+    }
+
 }

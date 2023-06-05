@@ -17,8 +17,7 @@ public class ProductMapper implements Function<Product, ProductGetDto> {
                 product.getDescription(),
                 product.getAmount(),
                 product.getImage(),
-                product.getOrganization_warehouse().getName(),
-                product.getEvent_warehouse() != null ? product.getEvent_warehouse().getName() : ""
+                product.getOrganization_warehouse().getName()
         );
     }
 }
