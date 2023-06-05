@@ -1,19 +1,20 @@
 package nure.ua.volunteering_ua.service.customer;
 
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
+import nure.ua.volunteering_ua.dto.customer.CustomerPageResponse;
 import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.mapper.CustomerMapper;
+import nure.ua.volunteering_ua.mapper.CustomerPageMapper;
 import nure.ua.volunteering_ua.model.user.Customer;
-import nure.ua.volunteering_ua.model.user.Organization;
 import nure.ua.volunteering_ua.repository.customer.CustomerRepository;
 import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -23,13 +24,15 @@ public class CustomerService {
 
     private final OrganizationRepository organizationRepository;
     private final CustomerMapper customerMapper;
+    private final CustomerPageMapper customerPageMapper;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, UserServiceSCRT userServiceSCRT, OrganizationRepository organizationRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository, UserServiceSCRT userServiceSCRT, OrganizationRepository organizationRepository, CustomerMapper customerMapper, CustomerPageMapper customerPageMapper) {
         this.customerRepository = customerRepository;
         this.userServiceSCRT = userServiceSCRT;
         this.organizationRepository = organizationRepository;
         this.customerMapper = customerMapper;
+        this.customerPageMapper = customerPageMapper;
     }
 
     public CustomerGetDto getCurrentLoggedInCustomer() {
@@ -81,5 +84,15 @@ public class CustomerService {
                             customer.unsubscribe(organization);
                             customerRepository.save(customer);
                         }));
+    }
+
+    public CustomerPageResponse getAllCustomersByOrganizationId(int pageNumber, int sizeOfPage, String sortBy, long organizationId) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
+        return customerPageMapper.apply(customerRepository.getAllByOrganization(pageable, organizationId));
+    }
+
+    public CustomerPageResponse getAllParticipantsOfEvent(int pageNumber, int sizeOfPage, String sortBy, long eventID) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
+        return customerPageMapper.apply(customerRepository.findAllParticipants(pageable, eventID));
     }
 }

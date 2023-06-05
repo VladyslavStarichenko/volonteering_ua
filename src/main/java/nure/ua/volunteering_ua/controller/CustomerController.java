@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
+import nure.ua.volunteering_ua.dto.customer.CustomerPageResponse;
+import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.service.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,6 +73,22 @@ public class CustomerController {
                 customerService.getCustomerByName(customerName),
                 HttpStatus.OK
         );
+    }
+
+    @ApiOperation(value = "Get all customers by organizationId")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_CUSTOMER')")
+    @GetMapping("/subscriptions/{organizationId}/{pageNumber}/{pageSize}/{sortBy}")
+    public ResponseEntity<CustomerPageResponse> getAllEventsByCustomerId(
+            @ApiParam(value = "Organization Id") @PathVariable Long organizationId,
+            @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by") @PathVariable String sortBy
+    ) {
+        if (sortBy.isBlank()) {
+            sortBy = "id";
+        }
+        return new ResponseEntity<>(customerService
+                .getAllCustomersByOrganizationId(pageNumber, pageSize, sortBy ,organizationId), HttpStatus.OK);
     }
 
 }
