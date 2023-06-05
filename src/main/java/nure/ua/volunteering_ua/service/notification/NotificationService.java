@@ -16,6 +16,7 @@ import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -70,9 +71,9 @@ public class NotificationService {
         }
     }
 
-    public NotificationPageResponse getAllCustomerNotifications(int pageNumber, int sizeOfPage, String customerName) {
+    public NotificationPageResponse getAllCustomerNotifications(int pageNumber, int sizeOfPage, String sortBy, String customerName) {
         Customer customer = customerService.getCustomerByNameInternal(customerName);
-        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
         return notificationPageMapper.apply(notificationRepository.findAllByCustomer(pageable, customer));
     }
 

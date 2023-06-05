@@ -28,14 +28,18 @@ public class NotificationController {
     }
 
     @ApiOperation(value = "Get all notifications by customer")
-    @GetMapping("/{pageNumber}/{pageSize}/{customerName}")
+    @GetMapping("/{pageNumber}/{pageSize}/{customerName}/{sortBy}")
     public ResponseEntity<NotificationPageResponse> getAllCustomerNotifications(
             @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
             @ApiParam(value = "Page size") @PathVariable int pageSize,
-            @ApiParam(value = "Customer Name") @PathVariable String customerName
+            @ApiParam(value = "Customer Name") @PathVariable String customerName,
+            @ApiParam(value = "SortBy") @PathVariable String sortBy
     ) {
+        if (sortBy.isBlank()) {
+            sortBy = "createdAt";
+        }
         return new ResponseEntity<>(
-                notificationService.getAllCustomerNotifications(pageNumber, pageSize, customerName),
+                notificationService.getAllCustomerNotifications(pageNumber, pageSize,sortBy, customerName),
                 HttpStatus.OK
         );
     }
