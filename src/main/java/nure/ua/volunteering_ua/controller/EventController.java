@@ -80,13 +80,18 @@ public class EventController {
     }
 
     @ApiOperation(value = "Get all events")
-    @GetMapping("/all-events/{pageNumber}/{pageSize}")
+    @GetMapping("/all-events/{pageNumber}/{pageSize}/{sortBy}")
     public ResponseEntity<EventPageResponse> getAllEvents(
             @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
-            @ApiParam(value = "Page size") @PathVariable int pageSize
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by") @PathVariable String sortBy
+
     ) {
+        if (sortBy.isBlank()) {
+            sortBy = "start_date";
+        }
         return new ResponseEntity<>(eventService
-                .getAllEvents(pageNumber, pageSize), HttpStatus.OK);
+                .getAllEvents(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get all participating events by customerId")
@@ -103,7 +108,7 @@ public class EventController {
 
     @ApiOperation(value = "Get the event by id")
     @GetMapping("/event/{eventId}")
-    public ResponseEntity<EventGetDto> getAllEventsById(
+    public ResponseEntity<EventGetDto> getEventById(
             @ApiParam(value = "CustomerId") @PathVariable Long eventId) {
         return new ResponseEntity<>(eventService
                 .getEventById(eventId), HttpStatus.OK);

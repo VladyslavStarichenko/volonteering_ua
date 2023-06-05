@@ -23,6 +23,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -148,8 +149,8 @@ public class EventService {
         return eventRepository.getAllEvents();
     }
 
-    public EventPageResponse getAllEvents(int pageNumber, int sizeOfPage) {
-        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
+    public EventPageResponse getAllEvents(int pageNumber, int sizeOfPage, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
         return eventPageMapper.apply(eventRepository.getAllEventsPage(pageable));
     }
 
