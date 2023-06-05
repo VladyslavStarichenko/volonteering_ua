@@ -119,8 +119,8 @@ public class EventService {
         }
     }
 
-    public Pair<CustomerGetDto, Integer> unParticipate(Long customerId, Long eventId) {
-        Customer customer = customerService.getCustomerByIdInternal(customerId);
+    public Pair<CustomerGetDto, Integer> unParticipate(String customerName, Long eventId) {
+        Customer customer = customerService.getCustomerByNameInternal(customerName);
         Event event = getEventByIdInternal(eventId);
         if (!participationCheck(customer, event)) {
             throw new CustomException("Provided customer is not a participant.", HttpStatus.BAD_REQUEST);

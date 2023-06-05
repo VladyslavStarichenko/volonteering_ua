@@ -72,11 +72,11 @@ public class EventController {
 
     @ApiOperation(value = "Unparticipate the event")
     @PreAuthorize("hasAnyRole('ROLE_CUSTOMER')")
-    @PutMapping("/un-participate/{customerId}/event/{eventId}")
+    @PutMapping("/un-participate/{customerName}/event/{eventId}")
     public ResponseEntity<Pair<CustomerGetDto, Integer>> unParticipate(
-            @ApiParam(value = "Customer id") @PathVariable Long customerId,
+            @ApiParam(value = "Customer name") @PathVariable String customerName,
             @ApiParam(value = "Event id") @PathVariable Long eventId) {
-        return new ResponseEntity<>(eventService.unParticipate(customerId, eventId), HttpStatus.CREATED);
+        return new ResponseEntity<>(eventService.unParticipate(customerName, eventId), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Get all events")
