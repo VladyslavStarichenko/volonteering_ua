@@ -33,4 +33,10 @@ public class Feedback {
 
     private int rating;
 
+    public Feedback(String comment, Customer customer, Organization organization, int rating) {
+        this.comment = comment;
+        this.customer = customer;
+        this.organization = organization;
+        this.rating = rating;
+    }
 }
