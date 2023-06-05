@@ -47,7 +47,7 @@ public class RequestController {
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/delivered")
     public ResponseEntity<RequestGetDto> finish(@ApiParam(name = "Object to confirm") @RequestBody AidReqConfirm reqConfirm) {
-        return new ResponseEntity<>(requestService.finish(reqConfirm.getId(),reqConfirm.getCode()), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.finish(reqConfirm.getId(), reqConfirm.getCode()), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get all all requests")
@@ -67,18 +67,22 @@ public class RequestController {
             @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
             @ApiParam(value = "Page size") @PathVariable int pageSize
     ) {
-        return new ResponseEntity<>(requestService.getAllRequestsByCustomerId(customerId,pageNumber,pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.getAllRequestsByCustomerId(customerId, pageNumber, pageSize), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get all all requests by organization")
     @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ORGANIZATION_ADMIN')")
-    @GetMapping("/organization/allRequests/{organizationName}/{pageNumber}/{pageSize}")
+    @GetMapping("/organization/allRequests/{organizationName}/{pageNumber}/{pageSize}/{sortBy}")
     public ResponseEntity<AidRequestPageResponse> getAllRequestsOrganization(
             @ApiParam(value = "Organization name") @PathVariable String organizationName,
             @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
-            @ApiParam(value = "Page size") @PathVariable int pageSize
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by") @PathVariable String sortBy
     ) {
-        return new ResponseEntity<>(requestService.getAllRequestsByOrganization(pageNumber,pageSize,organizationName), HttpStatus.OK);
+        if (sortBy.isBlank()) {
+            sortBy = "volunteeringType";
+        }
+        return new ResponseEntity<>(requestService.getAllRequestsByOrganization(pageNumber, pageSize, sortBy, organizationName), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get the request by id")
@@ -88,8 +92,6 @@ public class RequestController {
     ) {
         return new ResponseEntity<>(requestService.getRequestById(requestId), HttpStatus.OK);
     }
-
-
 
 
 }
