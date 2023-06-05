@@ -15,7 +15,8 @@ public class FeedBackMapper implements Function<Feedback, FeedBackGetDto> {
                 feedback.getComment(),
                 feedback.getCustomer().getUser().getUserName(),
                 feedback.getOrganization().getName(),
-                feedback.getRating()
+                feedback.getRating(),
+                feedback.isEdited()
         );
     }
 }

@@ -33,6 +33,9 @@ public class Feedback {
 
     private int rating;
 
+    @Column(name = "is_edited")
+    private boolean isEdited;
+
     public Feedback(String comment, Customer customer, Organization organization, int rating) {
         this.comment = comment;
         this.customer = customer;

@@ -15,4 +15,5 @@ public class FeedBackGetDto {
     private String customerName;
     private String organizationName;
     private int rating;
+    private boolean edited;
 }

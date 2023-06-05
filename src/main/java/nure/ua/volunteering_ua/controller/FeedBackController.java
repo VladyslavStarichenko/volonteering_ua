@@ -10,12 +10,16 @@ import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.dto.feedback.FeedBackCreateDto;
 import nure.ua.volunteering_ua.dto.feedback.FeedBackGetDto;
 import nure.ua.volunteering_ua.dto.feedback.FeedBackPageResponse;
+import nure.ua.volunteering_ua.dto.organization.OrganizationCreateDto;
+import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
 import nure.ua.volunteering_ua.service.feedback.FeedBackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @Api(value = "Operations with feedBacks")
@@ -62,6 +66,26 @@ public class FeedBackController {
             @ApiParam(value = "CustomerId") @PathVariable Long feedbackId) {
         return new ResponseEntity<>(feedBackService
                 .getFeedBackById(feedbackId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Delete the feedback by id")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @DeleteMapping("/deleteFeedback/{feedbackId}")
+    public ResponseEntity<String> deleteFeedback(
+            @ApiParam(value = "Feedback id") @PathVariable Long feedbackId
+    ) {
+        feedBackService.delete(feedbackId);
+        return new ResponseEntity<>("The feedback was successfully deleted", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Update feedback")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @PutMapping("/update/{feedbackId}")
+    public ResponseEntity<String> updateOrganization(
+            @ApiParam(value = "FeedBack id") @PathVariable Long feedbackId,
+            @RequestBody FeedBackCreateDto feedBackCreateDto) {
+        feedBackService.updateFeedBack(feedBackCreateDto,feedbackId);
+        return new ResponseEntity<>("The feedback was successfully updated", HttpStatus.OK);
     }
 
 }
