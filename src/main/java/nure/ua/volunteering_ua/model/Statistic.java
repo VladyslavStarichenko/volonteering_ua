@@ -37,11 +37,19 @@ public class Statistic {
         double approvedStatistics = 0.0;
         double verificationStatistics = 0.0;
         if (requestsCount != 0) {
-            rating = (double) requestsCount / countDelivered * 100;
-            approvedStatistics = (double) requestsCount / countApproved * 100;
-            verificationStatistics = (double) requestsCount / countVerification * 100;
+            rating = checkStatisticData(countDelivered,requestsCount);
+            approvedStatistics = checkStatisticData(countApproved,requestsCount);
+            verificationStatistics = checkStatisticData(countVerification,requestsCount);
         }
         return new Statistic(requestsCount,rating, verificationStatistics, approvedStatistics);
+    }
+
+    private double checkStatisticData(int data, int requestsCount){
+        if(data == 0){
+            return  0.0;
+        }else {
+            return (double) requestsCount / data * 100;
+        }
     }
 
     private static int getCountByRequestStatus(Organization organization, Request_Status requestStatus) {
@@ -49,5 +57,6 @@ public class Statistic {
                 .stream()
                 .filter(aid_request -> aid_request.getRequestStatus() == requestStatus)
                 .count());
+
     }
 }
