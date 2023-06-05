@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class EventMapper implements Function<Event, EventGetDto> {
 
     @Autowired
-    private ProductMapper productMapper;
+    private EventProductMapper productMapper;
     @Autowired
     private LocationMapper locationMapper;
 
@@ -36,9 +36,7 @@ public class EventMapper implements Function<Event, EventGetDto> {
                                 .stream()
                         .map(customerMapper)
                                 .collect(Collectors.toList()),
-                Stream.of(event.getLocation())
-                        .map(locationMapper)
-                        .findFirst().get(),
+                locationMapper.apply(event.getLocation()),
                 event.getCapacity(),
                 event.getOrganization().getName()
 

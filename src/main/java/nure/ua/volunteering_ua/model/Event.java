@@ -39,7 +39,7 @@ public class Event extends BaseEntity {
     private Organization organization;
 
     @OneToMany(mappedBy = "event_warehouse")
-    private List<Product> products;
+    private List<EventProduct> products;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", referencedColumnName = "id")

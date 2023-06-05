@@ -294,21 +294,12 @@
           <column name="image" type="VARCHAR(255)">
               <constraints nullable="true"/>
           </column>
-          <column name="event_id" type="BIGINT">
-              <constraints nullable="true"/>
-          </column>
+
           <column name="organization_id" type="BIGINT">
               <constraints nullable="false"/>
           </column>
       </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="event_id"
-                                 baseTableName="product"
-                                 constraintName="fk_product_event"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="event"/>
 
         <addForeignKeyConstraint baseColumnNames="organization_id"
                                  baseTableName="product"
@@ -317,6 +308,47 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="organization"/>
+
+        <createTable tableName="event_product">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+            </column>
+            <column name="amount" type="INTEGER">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="event_product"
+                                 constraintName="fk_event_product_event"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="event"/>
         
         <createTable tableName="feedback">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -333,6 +365,9 @@
             </column>
             <column name="organization_id" type="BIGINT">
                 <constraints nullable="false"/>
+            </column>
+            <column name="is_edited" type="boolean">
+                <constraints nullable="true"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="customer_id"
@@ -681,6 +716,7 @@
             <column name="name" value="Organization 1"/>
             <column name="volunteering_type" value="SOCIAL"/>
             <column name="location_id" valueNumeric="1"/>
+            <column name="description" value="Organization 1 description"/>
             <column name="organization_admin" value="076a697c-2d1f-11ec-8d3d-0242ac130435"/>
             <column name="stripe_api_key" value="sk_test_51K470nA5ndul63ktyBYadvRoCFKtAUeNtbcZNQ3LWtGFgErJPNjT2kMiZcWaDzcEsW1JlQEpItJ3KOymj8rGSS4o00t1EZrS5d"/>
             <column name="stripe_public_key" value="pk_test_51K470nA5ndul63kt012jwvJexZhe3CrGJBPzzL1gOE0hGMgTK4fkggf5mriFzOoqlw7rp6Eau04wXfiGfFS8w4Jb006FYxkKtM"/>
@@ -694,9 +730,11 @@
             <column name="created" valueComputed="now()"/>
             <column name="updated" valueComputed="now()"/>
             <column name="name" value="Organization 2"/>
+            <column name="description" value="Organization 2 description"/>
             <column name="volunteering_type" value="ANIMALS"/>
             <column name="location_id" value="2"/>
             <column name="organization_admin" value="076a697c-2d1f-11ec-8d3d-0242ac130481"/>
+
         </insert>
 
 
@@ -762,8 +800,9 @@
             <column name="description" value="Event description"/>
             <column name="end_date" value="2023-05-20"/>
             <column name="start_date" value="2023-05-19"/>
-            <column name="location_id" value="3"/>
+            <column name="location_id" value="1"/>
             <column name="organization_id" value="1"/>
+            <column name="capacity" value="10"/>
         </insert>
 
         <insert tableName="event">
@@ -777,6 +816,8 @@
             <column name="start_date" value="2023-05-19"/>
             <column name="location_id" value="4"/>
             <column name="organization_id" value="2"/>
+            <column name="capacity" value="10"/>
+
         </insert>
 
         <insert tableName="event">
@@ -790,6 +831,7 @@
             <column name="start_date" value="2023-05-19"/>
             <column name="location_id" value="3"/>
             <column name="organization_id" value="1"/>
+            <column name="capacity" value="10"/>
         </insert>
 
         <insert tableName="product">
@@ -801,7 +843,6 @@
             <column name="name" value="Product Name"/>
             <column name="description" value="Product Description"/>
             <column name="image" value="url1"/>
-            <column name="event_id" value="2"/>
             <column name="organization_id" value="1"/>
         </insert>
 
@@ -814,7 +855,6 @@
             <column name="name" value="Product Name"/>
             <column name="description" value="Product Description"/>
             <column name="image" value="url1"/>
-            <column name="event_id" value="null"/>
             <column name="organization_id" value="1"/>
         </insert>
 
@@ -827,7 +867,6 @@
             <column name="name" value="Product Name1"/>
             <column name="description" value="Product Description"/>
             <column name="image" value="url1"/>
-            <column name="event_id" value="1"/>
             <column name="organization_id" value="2"/>
         </insert>
 
@@ -840,8 +879,43 @@
             <column name="name" value="Product Name2"/>
             <column name="description" value="Product Description"/>
             <column name="image" value="url1"/>
-            <column name="event_id" value="null"/>
             <column name="organization_id" value="2"/>
+        </insert>
+
+        <insert tableName="event_product">
+            <column name="id" value="2"/>
+            <column name="created" value="2023-05-19 10:30:00"/>
+            <column name="updated" value="2023-05-19 10:30:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="amount" value="10"/>
+            <column name="name" value="Product Name44"/>
+            <column name="description" value="Product Description"/>
+            <column name="image" value="url1"/>
+            <column name="event_id" value="2"/>
+        </insert>
+
+        <insert tableName="event_product">
+            <column name="id" value="1"/>
+            <column name="created" value="2023-05-19 10:30:00"/>
+            <column name="updated" value="2023-05-19 10:30:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="amount" value="10"/>
+            <column name="name" value="Product Name1"/>
+            <column name="description" value="Product Description"/>
+            <column name="image" value="url1"/>
+            <column name="event_id" value="1"/>
+        </insert>
+
+        <insert tableName="event_product">
+            <column name="id" value="3"/>
+            <column name="created" value="2023-05-19 10:30:00"/>
+            <column name="updated" value="2023-05-19 10:30:00"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="amount" value="10"/>
+            <column name="name" value="Product Name3"/>
+            <column name="description" value="Product Description"/>
+            <column name="image" value="url1"/>
+            <column name="event_id" value="2"/>
         </insert>
 
         <insert tableName="feedback">
@@ -850,6 +924,7 @@
             <column name="rating" value="5"/>
             <column name="organization_id" value="1"/>
             <column name="comment" value="This is a feedback message."/>
+            <column name="is_edited" value="false"/>
         </insert>
         <insert tableName="feedback">
             <column name="id" value="2"/>
@@ -857,6 +932,7 @@
             <column name="rating" value="5"/>
             <column name="organization_id" value="1"/>
             <column name="comment" value="This is a feedback message."/>
+            <column name="is_edited" value="false"/>
         </insert>
         <insert tableName="feedback">
             <column name="id" value="3"/>
@@ -864,6 +940,7 @@
             <column name="rating" value="5"/>
             <column name="organization_id" value="2"/>
             <column name="comment" value="This is a feedback message."/>
+            <column name="is_edited" value="false"/>
         </insert>
 
         <insert tableName="feedback">
@@ -872,6 +949,7 @@
             <column name="rating" value="3"/>
             <column name="organization_id" value="2"/>
             <column name="comment" value="This is a feedback message."/>
+            <column name="is_edited" value="false"/>
         </insert>
 
         <insert tableName="organization_volunteer">
@@ -958,12 +1036,7 @@
             <column name="organization_id" value="2"/>
         </insert>
 
-
-
     </changeSet>
-
-
-
 </databaseChangeLog>
 
 <!--

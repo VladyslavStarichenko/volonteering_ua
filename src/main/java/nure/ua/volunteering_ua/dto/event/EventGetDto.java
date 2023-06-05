@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.location.LocationDto;
+import nure.ua.volunteering_ua.dto.product.ProductEventGetDto;
 import nure.ua.volunteering_ua.dto.product.ProductGetDto;
 
 import java.util.Date;
@@ -20,7 +21,7 @@ public class EventGetDto {
     private String description;
     private Date startDate;
     private Date endDate;
-    private List<ProductGetDto> products;
+    private List<ProductEventGetDto> products;
     private List<CustomerGetDto> customers;
     private LocationDto location;
     private int capacity;
