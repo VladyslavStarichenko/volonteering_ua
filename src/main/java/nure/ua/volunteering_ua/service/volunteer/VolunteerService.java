@@ -20,14 +20,12 @@ public class VolunteerService {
     private final VolunteerRepository volunteerRepository;
     private final VolunteeringMapper volunteeringMapper;
     private final UserServiceSCRT userServiceSCRT;
-    private final UserRepository userRepository;
 
     @Autowired
-    public VolunteerService(VolunteerRepository volunteerRepository, VolunteeringMapper volunteeringMapper, UserServiceSCRT userServiceSCRT, UserRepository userRepository) {
+    public VolunteerService(VolunteerRepository volunteerRepository, VolunteeringMapper volunteeringMapper, UserServiceSCRT userServiceSCRT) {
         this.volunteerRepository = volunteerRepository;
         this.volunteeringMapper = volunteeringMapper;
         this.userServiceSCRT = userServiceSCRT;
-        this.userRepository = userRepository;
     }
 
     public void registerInOrganization(String volunteerName) {

@@ -60,4 +60,5 @@ public class VolunteerController {
     ) {
         return new ResponseEntity<>(volunteerService.getVolunteerByName(volunteerName), HttpStatus.OK);
     }
+
 }
