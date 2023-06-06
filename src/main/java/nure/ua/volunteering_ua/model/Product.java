@@ -34,6 +34,8 @@ public class Product extends BaseEntity {
 
     private String image;
 
+    @OneToOne(mappedBy = "product")
+    private EventProduct eventProduct;
     @ManyToOne
     @JoinColumn(name = "organization_id",nullable = false)
     private Organization organization_warehouse;
@@ -49,6 +51,7 @@ public class Product extends BaseEntity {
     }
 
     public Product(String name, String description, Integer amount, String image, Organization organization_warehouse) {
+        super(System_Status.ACTIVE);
         this.name = name;
         this.description = description;
         this.amount = amount;

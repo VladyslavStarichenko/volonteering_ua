@@ -18,27 +18,20 @@ public class EventProduct extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    private int amount;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "amount")
-    private Integer amount;
-
-    private String image;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event_warehouse;
 
-    public EventProduct(String name, String description, Integer amount, String image, Event event_warehouse) {
+    public EventProduct(Product product, Event event_warehouse, int amount) {
         super(System_Status.ACTIVE);
-        this.name = name;
-        this.description = description;
         this.amount = amount;
-        this.image = image;
+        this.product = product;
         this.event_warehouse = event_warehouse;
     }
 }

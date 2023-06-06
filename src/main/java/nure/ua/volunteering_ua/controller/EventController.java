@@ -109,7 +109,7 @@ public class EventController {
     @ApiOperation(value = "Get the event by id")
     @GetMapping("/event/{eventId}")
     public ResponseEntity<EventGetDto> getEventById(
-            @ApiParam(value = "CustomerId") @PathVariable Long eventId) {
+            @ApiParam(value = "Event id") @PathVariable Long eventId) {
         return new ResponseEntity<>(eventService
                 .getEventById(eventId), HttpStatus.OK);
     }

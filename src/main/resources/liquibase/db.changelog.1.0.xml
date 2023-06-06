@@ -326,17 +326,13 @@
             <column name="amount" type="INTEGER">
                 <constraints nullable="true"/>
             </column>
-            <column name="name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="VARCHAR(255)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="image" type="VARCHAR(255)">
-                <constraints nullable="true"/>
-            </column>
+
 
             <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="product_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -349,6 +345,14 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="event"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="event_product"
+                                 constraintName="fk_product_event_product"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
         
         <createTable tableName="feedback">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -888,10 +892,8 @@
             <column name="updated" value="2023-05-19 10:30:00"/>
             <column name="status" value="ACTIVE"/>
             <column name="amount" value="10"/>
-            <column name="name" value="Product Name44"/>
-            <column name="description" value="Product Description"/>
-            <column name="image" value="url1"/>
             <column name="event_id" value="2"/>
+            <column name="product_id" value="1"/>
         </insert>
 
         <insert tableName="event_product">
@@ -900,9 +902,7 @@
             <column name="updated" value="2023-05-19 10:30:00"/>
             <column name="status" value="ACTIVE"/>
             <column name="amount" value="10"/>
-            <column name="name" value="Product Name1"/>
-            <column name="description" value="Product Description"/>
-            <column name="image" value="url1"/>
+            <column name="product_id" value="2"/>
             <column name="event_id" value="1"/>
         </insert>
 
@@ -912,10 +912,8 @@
             <column name="updated" value="2023-05-19 10:30:00"/>
             <column name="status" value="ACTIVE"/>
             <column name="amount" value="10"/>
-            <column name="name" value="Product Name3"/>
-            <column name="description" value="Product Description"/>
-            <column name="image" value="url1"/>
-            <column name="event_id" value="2"/>
+            <column name="product_id" value="3"/>
+            <column name="event_id" value="3"/>
         </insert>
 
         <insert tableName="feedback">
@@ -1036,6 +1034,24 @@
             <column name="organization_id" value="2"/>
         </insert>
 
+    </changeSet>
+
+    <changeSet id="reset-sequence" author="goldsilver12">
+        <sql>
+        <![CDATA[
+            ALTER SEQUENCE customer_id_seq RESTART WITH 10;
+            ALTER SEQUENCE event_id_seq RESTART WITH 10;
+            ALTER SEQUENCE event_product_id_seq RESTART WITH 10;
+            ALTER SEQUENCE feedback_id_seq RESTART WITH 10;
+            ALTER SEQUENCE location_id_seq RESTART WITH 10;
+            ALTER SEQUENCE notification_id_seq RESTART WITH 10;
+            ALTER SEQUENCE organization_id_seq RESTART WITH 10;
+            ALTER SEQUENCE product_id_seq RESTART WITH 10;
+            ALTER SEQUENCE request_id_seq RESTART WITH 10;
+            ALTER SEQUENCE roles_id_seq RESTART WITH 10;
+            ALTER SEQUENCE volunteer_id_seq RESTART WITH 10;
+            ]]>
+    </sql>
     </changeSet>
 </databaseChangeLog>
 
