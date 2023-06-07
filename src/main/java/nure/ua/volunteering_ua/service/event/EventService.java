@@ -124,7 +124,7 @@ public class EventService {
         }
     }
 
-    public Pair<CustomerGetDto, Integer> unParticipate(String customerName, Long eventId) {
+    public EventParticipateResponse unParticipate(String customerName, Long eventId) {
         Customer customer = customerService.getCustomerByNameInternal(customerName);
         Event event = getEventByIdInternal(eventId);
         if (!participationCheck(customer, event)) {
@@ -134,7 +134,7 @@ public class EventService {
             event.setCapacity(event.getCapacity() + 1);
             eventRepository.unparticipate(customer.getId(),event.getId());
             eventMapper.apply(eventRepository.save(event));
-            return Pair.of(customerMapper.apply(customer), event.getCapacity());
+            return new EventParticipateResponse(customerMapper.apply(customer), event.getCapacity());
         }
     }
 
