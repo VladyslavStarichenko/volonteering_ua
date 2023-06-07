@@ -2,10 +2,7 @@ package nure.ua.volunteering_ua.controller;
 import com.stripe.exception.StripeException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import nure.ua.volunteering_ua.dto.payment.BalanceDto;
-import nure.ua.volunteering_ua.dto.payment.ChargeCustomerDto;
-import nure.ua.volunteering_ua.dto.payment.PaymentMethodAddDto;
-import nure.ua.volunteering_ua.dto.payment.TransactionDto;
+import nure.ua.volunteering_ua.dto.payment.*;
 import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.service.payment.StripeClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +38,13 @@ public class PaymentController {
             @ApiParam(value = "Limit of transactions to retrieve") @PathVariable int limit
     ) throws StripeException {
         return stripeClient.getTransactions(organizationName, limit);
+    }
+
+    @GetMapping("/stripeAccess/{organizationName}")
+    public ResponseEntity<PaymentMethodDto> getStripeKeys(
+            @ApiParam(value = "Organization name to check transactions") @PathVariable String organizationName
+    ) throws StripeException {
+        return new ResponseEntity<>(stripeClient.getStripeKey(organizationName),HttpStatus.OK);
     }
 
     @PutMapping("/addPaymentMethod")

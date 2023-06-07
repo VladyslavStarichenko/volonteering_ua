@@ -45,19 +45,29 @@ public class StripeClient {
         this.balanceMapper = balanceMapper;
     }
 
-    public BalanceDto getBalance(String organizationName) throws StripeException {
-        Stripe.apiKey = getStripe_secret_key(organizationName);
-        return balanceMapper.apply(Balance.retrieve());
+    public BalanceDto getBalance(String organizationName) {
+        try {
+            Stripe.apiKey = getStripe_secret_key(organizationName);
+            return balanceMapper.apply(Balance.retrieve());
+
+        } catch (StripeException stripeException) {
+            throw new CustomException("There is an error with retrieving balance of the organization", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    public List<TransactionDto> getTransactions(String organizationName, int limit) throws StripeException {
-        Map<String, Object> params = new HashMap<>();
-        params.put("limit", limit); // Specify the number of transactions to retrieve
-        Stripe.apiKey = getStripe_secret_key(organizationName);
-        return Charge.list(params).getData()
-                .stream()
-                .map(transactionMapper)
-                .collect(Collectors.toList());
+    public List<TransactionDto> getTransactions(String organizationName, int limit)  {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("limit", limit); // Specify the number of transactions to retrieve
+            Stripe.apiKey = getStripe_secret_key(organizationName);
+            return Charge.list(params).getData()
+                    .stream()
+                    .map(transactionMapper)
+                    .collect(Collectors.toList());
+
+        } catch (StripeException stripeException) {
+            throw new CustomException("There is an error with retrieving transactions of the organization", HttpStatus.BAD_REQUEST);
+        }
     }
 
     private String getStripe_secret_key(String organizationName) {
@@ -70,10 +80,9 @@ public class StripeClient {
         nure.ua.volunteering_ua.model.user.Customer customer = customerRepository.findByUser(currentLoggedInUser)
                 .orElseThrow(() -> new CustomException("There is no customer logged in", HttpStatus.BAD_REQUEST));
         String stripeCustomerEmail = "";
-        if(customer.getId() == chargeCustomerDto.getCustomerId()){
+        if (customer.getId() == chargeCustomerDto.getCustomerId()) {
             stripeCustomerEmail = customer.getUser().getEmail();
-        }
-        else {
+        } else {
             throw new CustomException("Id of the customer is not matching with logged in customer", HttpStatus.BAD_REQUEST);
         }
         Map<String, Object> customerParams = new HashMap<String, Object>();
@@ -92,9 +101,9 @@ public class StripeClient {
         chargeParams.put("amount", (int) (chargeCustomerDto.getAmount() * 100));
         chargeParams.put("currency", chargeCustomerDto.getCurrency().toString());
         chargeParams.put("source", chargeCustomerDto.getToken());
-        chargeParams.put("receiptEmail",stripeCustomer.getEmail());
-        chargeParams.put("application","Volunteering_UA");
-        chargeParams.put("description","Donate to Volunteering_UA");
+        chargeParams.put("receiptEmail", stripeCustomer.getEmail());
+        chargeParams.put("application", "Volunteering_UA");
+        chargeParams.put("description", "Donate to Volunteering_UA");
         return transactionMapper.apply(Charge.create(chargeParams));
     }
 

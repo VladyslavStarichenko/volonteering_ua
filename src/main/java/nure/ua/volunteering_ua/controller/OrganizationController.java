@@ -10,8 +10,13 @@ import nure.ua.volunteering_ua.dto.organization.OrganizationPageResponse;
 import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
 import nure.ua.volunteering_ua.service.organization.OrganizationService;
+import nure.ua.volunteering_ua.service.statistics.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +32,12 @@ import static java.util.function.Predicate.not;
 @Slf4j
 public class OrganizationController {
     private final OrganizationService organizationService;
+    private final StatisticService statisticService;
 
     @Autowired
-    public OrganizationController(OrganizationService organizationService) {
+    public OrganizationController(OrganizationService organizationService, StatisticService statisticService) {
         this.organizationService = organizationService;
+        this.statisticService = statisticService;
     }
 
     @ApiOperation(value = "Get my volunteering organization")
@@ -117,5 +124,27 @@ public class OrganizationController {
         OrganizationGetDto organization = organizationService
                 .updateOrganization(organizationCreateDto);
         return new ResponseEntity<>(organization, HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("get-statistic-report/{limit}/{organizationName}/pdf")
+    public ResponseEntity<Resource> generateStatisticPdf(
+            @ApiParam(value = "Limit of transactions to show", required = true)
+            @PathVariable int limit,
+            @ApiParam(value = "Organization name", required = true)
+            @PathVariable  String organizationName
+
+    )
+    {
+        byte[] pdfData = statisticService.generatePdf(organizationName, limit); // Pass the desired organization name and transaction limit
+        ByteArrayResource resource = new ByteArrayResource(pdfData);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=statistics.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
     }
 }

@@ -1,6 +1,8 @@
 package nure.ua.volunteering_ua.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import nure.ua.volunteering_ua.model.user.Organization;
 
 
