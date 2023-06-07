@@ -8,6 +8,7 @@ import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.event.EventCreateDto;
 import nure.ua.volunteering_ua.dto.event.EventGetDto;
 import nure.ua.volunteering_ua.dto.event.EventPageResponse;
+import nure.ua.volunteering_ua.dto.event.EventParticipateResponse;
 import nure.ua.volunteering_ua.service.event.EventService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class EventController {
     @ApiOperation(value = "Participate the event")
     @PreAuthorize("hasAnyRole('ROLE_CUSTOMER')")
     @PutMapping("/participate/{customerName}/event/{eventId}")
-    public ResponseEntity<Pair<CustomerGetDto, Integer>> participate(
+    public ResponseEntity<EventParticipateResponse> participate(
             @ApiParam(value = "Customer name") @PathVariable String customerName,
             @ApiParam(value = "Event id") @PathVariable Long eventId) {
         return new ResponseEntity<>(eventService.participate(customerName, eventId), HttpStatus.CREATED);

@@ -2,6 +2,7 @@ package nure.ua.volunteering_ua.service.event;
 
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.event.EventPageResponse;
+import nure.ua.volunteering_ua.dto.event.EventParticipateResponse;
 import nure.ua.volunteering_ua.dto.location.LocationDto;
 import nure.ua.volunteering_ua.dto.event.EventCreateDto;
 import nure.ua.volunteering_ua.dto.event.EventGetDto;
@@ -26,7 +27,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EventService {
@@ -99,7 +103,7 @@ public class EventService {
         return organizationService.getOrganizationByNameInternalUsage(organizationName);
     }
 
-    public Pair<CustomerGetDto, Integer> participate(String customerName, Long eventId) {
+    public EventParticipateResponse participate(String customerName, Long eventId) {
         Customer customer = customerService.getCustomerByNameInternal(customerName);
         Event event = getEventByIdInternal(eventId);
         if (participationCheck(customer, event) || event.getCapacity() < 0) {
@@ -113,7 +117,8 @@ public class EventService {
                 event.setCapacity(event.getCapacity() - 1);
                 eventRepository.participate(customer.getId(), event.getId());
                 eventRepository.save(event);
-                return Pair.of(customerMapper.apply(customer), event.getCapacity());
+
+                return new EventParticipateResponse( customerMapper.apply(customer), event.getCapacity());
 
             }
         }
