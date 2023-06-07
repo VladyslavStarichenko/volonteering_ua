@@ -10,8 +10,12 @@ import lombok.NoArgsConstructor;
 public class EventProductGetDto {
 
     private Long id;
-    private Long productId;
-    private Long eventId;
+    private Long product_id;
+    private String product_name;
     private int amount;
+    private String description;
+    private String image;
+    private String event_name;
+
 
 }
