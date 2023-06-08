@@ -69,20 +69,6 @@ public class AdminController {
                 .body("User with name: " + userName + " was successfully blocked");
     }
 
-//    @GetMapping("/backup")
-//    public void generateAndDownloadBackup(HttpServletResponse response) {
-//        try {
-//            InputStream backupInputStream = backupService.createBackup();
-//
-//            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-//            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"backup.sql\"");
-//
-//            IOUtils.copy(backupInputStream, response.getOutputStream());
-//            response.flushBuffer();
-//        } catch (IOException e) {
-//            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-//        }
-//    }
 
     @ApiOperation(value = "Get all system users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
