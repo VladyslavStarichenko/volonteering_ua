@@ -15,6 +15,7 @@ import nure.ua.volunteering_ua.repository.product.ProductRepository;
 import nure.ua.volunteering_ua.service.event.EventService;
 import nure.ua.volunteering_ua.service.organization.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -177,7 +178,8 @@ public class ProductService {
     public EventProductPageResponse getAllEventProducts(int pageNumber, int sizeOfPage, String sortBy, Long eventId) {
         Event event = eventService.getEventByIdInternal(eventId);
         Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
-        return eventProductPageMapper.apply(eventProductRepository.findAllByEvent_warehouse(pageable, event.getId()));
+        Page<EventProduct> allByEvent_warehouse = eventProductRepository.findAllByEvent_warehouse(pageable, event.getId());
+        return eventProductPageMapper.apply(allByEvent_warehouse);
     }
 
     private Product getProductByIdInternal(Long id) {

@@ -117,9 +117,7 @@ public class EventService {
                 event.setCapacity(event.getCapacity() - 1);
                 eventRepository.participate(customer.getId(), event.getId());
                 eventRepository.save(event);
-
                 return new EventParticipateResponse( customerMapper.apply(customer), event.getCapacity());
-
             }
         }
     }

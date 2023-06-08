@@ -14,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface EventProductRepository extends PagingAndSortingRepository<EventProduct, Long> {
 
-//    @Query(value = "SELECT * FROM event_product WHERE event_id =?", nativeQuery = true)
-//    Page<EventProduct> findAllByEvent_warehouse(Pageable pageable, Long event_id);
+    @Query(value = "SELECT * FROM event_product WHERE event_id =?", nativeQuery = true)
+    Page<EventProduct> findAllByEvent_warehouse(Pageable pageable, Long event_id);
 
-    @Query(value = "SELECT ep.id AS \"id\", p.id  AS \"product_id\", p.name  AS \"product_name\", ep.amount AS \"amount\", p.description AS \"description\", p.image AS \"image\", e.name  AS \"event_name\" FROM event_product ep JOIN product p ON ep.product_id = p.id JOIN event e ON ep.event_id = e.id WHERE ep.event_id=?", nativeQuery = true)
-    Page<EventProductGetDto> findAllByEvent_warehouse(Pageable pageable, Long event_id);
+//    @Query(value = "SELECT ep.id AS \"id\", p.id  AS \"product_id\", p.name  AS \"product_name\", ep.amount AS \"amount\", p.description AS \"description\", p.image AS \"image\", e.name  AS \"event_name\" FROM event_product ep JOIN product p ON ep.product_id = p.id JOIN event e ON ep.event_id = e.id WHERE ep.event_id=?", nativeQuery = true)
+//    Page<EventProductGetDto> findAllByEvent_warehouse(Pageable pageable, Long event_id);
 
     @Modifying
     @Transactional

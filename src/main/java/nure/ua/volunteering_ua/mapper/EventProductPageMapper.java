@@ -8,17 +8,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
-
+import java.util.stream.Collectors;
 
 
 @Service
-public class EventProductPageMapper implements Function<Page<EventProductGetDto>, EventProductPageResponse> {
+public class EventProductPageMapper implements Function<Page<EventProduct>, EventProductPageResponse> {
 
+    private final EventProductMapper eventProductMapper;
+
+    @Autowired
+    public EventProductPageMapper(EventProductMapper eventProductMapper) {
+        this.eventProductMapper = eventProductMapper;
+    }
 
     @Override
-    public EventProductPageResponse apply(Page<EventProductGetDto> eventProducts) {
+    public EventProductPageResponse apply(Page<EventProduct> eventProducts) {
         return new EventProductPageResponse(
-                eventProducts.getContent(),
+                eventProducts.getContent()
+                        .stream()
+                        .map(eventProductMapper)
+                        .collect(Collectors.toList()),
                 eventProducts.getNumber(),
                 eventProducts.getSize(),
                 eventProducts.getTotalElements(),
