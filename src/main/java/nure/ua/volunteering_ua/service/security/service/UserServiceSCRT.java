@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -83,19 +84,21 @@ public class UserServiceSCRT {
         return customerMapper.apply(customer);
     }
 
-    public Map<Object, Object> signUpOrganizationAdmin(User user) {
+    public UserGetDto signUpOrganizationAdmin(User user) {
         validateUser(user);
         user.setSocialCategory(SocialCategory.NO_CATEGORY);
         User registeredUser = registerUser(user, "ROLE_ORGANIZATION_ADMIN");
         registeredUser.setEmail(user.getEmail());
-        userRepository.save(registeredUser);
-        String token = jwtTokenProvider.createToken(registeredUser.getUserName(), new ArrayList<>(Collections.singletonList(registeredUser.getRole())));
-        String userNameSignedIn = registeredUser.getUserName();
-        Map<Object, Object> response = new HashMap<>();
-        response.put("username", userNameSignedIn);
-        response.put("token", token);
-        response.put("role", registeredUser.getRole().getName());
-        return response;
+        return userMapper.apply(userRepository.save(registeredUser));
+    }
+
+    public List<UserGetDto> searchUserByName(String userName) {
+        List<Optional<User>> users = userRepository.searchUserByName(userName);
+        return users.stream()
+                .map(
+                        user -> userMapper.apply(user.orElseThrow(() -> new CustomException("There is no user exists with specified search pattern: ", HttpStatus.NOT_FOUND)))
+                )
+                .collect(Collectors.toList());
     }
 
     private void validateUser(User user) {

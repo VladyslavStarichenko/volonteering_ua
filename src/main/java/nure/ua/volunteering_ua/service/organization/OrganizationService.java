@@ -91,6 +91,15 @@ public class OrganizationService {
                 );
     }
 
+    public List<OrganizationGetDto> searchOrganizationByName(String organizationName) {
+        List<Optional<Organization>> users = organizationRepository.searchOrganizationByName(organizationName);
+        return users.stream()
+                .map(
+                        organization -> organizationMapper.apply(organization.orElseThrow(() -> new CustomException("There is no organization exists with specified search pattern: ", HttpStatus.NOT_FOUND)))
+                )
+                .collect(Collectors.toList());
+    }
+
     public Organization getOrganizationByNameInternalUsage(String name) {
         return organizationRepository.getOrganizationByName(name)
                 .orElseThrow(() -> new CustomException(

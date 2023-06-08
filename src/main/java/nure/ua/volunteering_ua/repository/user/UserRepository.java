@@ -8,6 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +24,9 @@ public interface UserRepository extends PagingAndSortingRepository<User, UUID> {
     @Transactional
     @Query(value = "UPDATE users  SET status = ? WHERE user_name = ?", nativeQuery = true)
     void updateUserStatus(String status, String userName);
+    @Query(value = "SELECT * FROM users u WHERE u.user_name LIKE %?%", nativeQuery = true)
+    List<Optional<User>> searchUserByName(String userName);
+
 
 
 

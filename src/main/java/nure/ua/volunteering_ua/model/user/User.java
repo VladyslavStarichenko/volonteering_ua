@@ -26,7 +26,7 @@ public class User extends BaseEntity {
     private UUID id;
 
     @Column(name = "user_name", unique = true, nullable = false)
-    @Size(min = 2, message = "Username should be unique and with length more then 2")
+    @Size(min = 2, message = "Username should be unique and with length more than 2")
     private String userName;
 
     @Column(name = "password")

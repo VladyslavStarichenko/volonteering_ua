@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +40,7 @@ public class AdminController {
     @PostMapping("registerVolunteeringAdmin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "Register volunteering organization admin")
-    public ResponseEntity<Map<Object, Object>> signUp(@ApiParam(value = "User name to register volunteering organization admin") @RequestBody AuthenticationDto authenticationDto) {
+    public ResponseEntity<UserGetDto> signUp(@ApiParam(value = "User name to register volunteering organization admin") @RequestBody AuthenticationDto authenticationDto) {
         return Optional.ofNullable(authenticationDto)
                 .map(AuthenticationDto::toUser)
                 .map(userServiceSCRT::signUpOrganizationAdmin)
@@ -89,6 +90,14 @@ public class AdminController {
             @ApiParam(value = "User id") @PathVariable UUID userId) {
         return new ResponseEntity<>(userServiceSCRT
                 .getUserById(userId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Search user by name")
+    @GetMapping("/user/search/{userName}")
+    public ResponseEntity<List<UserGetDto>> getUserById(
+            @ApiParam(value = "User name") @PathVariable String userName) {
+        return new ResponseEntity<>(userServiceSCRT
+                .searchUserByName(userName), HttpStatus.OK);
     }
 
 

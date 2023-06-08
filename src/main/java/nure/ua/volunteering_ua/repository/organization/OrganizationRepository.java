@@ -1,9 +1,7 @@
 package nure.ua.volunteering_ua.repository.organization;
 
 
-import liquibase.pro.packaged.U;
 import nure.ua.volunteering_ua.model.user.Organization;
-import nure.ua.volunteering_ua.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -48,5 +46,9 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
   @Transactional
   @Query(value = "update organization set stripe_api_key=?, stripe_public_key=?, stripe_secret_key=? where id=?", nativeQuery = true)
   void updatePaymentMethod(String stripe_api_key, String stripe_public_key, String stripe_secret_key, Long id);
+
+
+  @Query(value = "SELECT * FROM organization o WHERE o.name LIKE %?%", nativeQuery = true)
+  List<Optional<Organization>> searchOrganizationByName(String organizationName);
 
 }
