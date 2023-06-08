@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import nure.ua.volunteering_ua.dto.auth.AuthenticationDto;
+import nure.ua.volunteering_ua.dto.user.UserGetDto;
 import nure.ua.volunteering_ua.dto.user.UserPageResponse;
 import nure.ua.volunteering_ua.exeption.EmptyDataException;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @Api(value = "Admin operations")
@@ -37,7 +39,7 @@ public class AdminController {
     @PostMapping("registerVolunteeringAdmin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "Register volunteering organization admin")
-    public ResponseEntity<Map<Object, Object>> signUp(@ApiParam(value = "User object to sign up to the system") @RequestBody AuthenticationDto authenticationDto) {
+    public ResponseEntity<Map<Object, Object>> signUp(@ApiParam(value = "User name to register volunteering organization admin") @RequestBody AuthenticationDto authenticationDto) {
         return Optional.ofNullable(authenticationDto)
                 .map(AuthenticationDto::toUser)
                 .map(userServiceSCRT::signUpOrganizationAdmin)
@@ -46,11 +48,20 @@ public class AdminController {
     }
 
 
-    @PutMapping("blockVolunteeringAdmin/{userName}")
+    @PutMapping("unblockUser/{userName}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ApiOperation(value = "Block volunteering user")
-    public ResponseEntity<String> block(@ApiParam(value = "User object to sign up to the system") @PathVariable String userName) {
-        userServiceSCRT.blockComplexAdmin(userName);
+    @ApiOperation(value = "Unblock user")
+    public ResponseEntity<String> block(@ApiParam(value = "User name to unblock") @PathVariable String userName) {
+        userServiceSCRT.unBlockUser(userName);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User with name: " + userName + " was successfully unblocked");
+    }
+
+    @PutMapping("blockUser/{userName}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "block user")
+    public ResponseEntity<String> unBlock(@ApiParam(value = "User name to block") @PathVariable String userName) {
+        userServiceSCRT.blockUser(userName);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("User with name: " + userName + " was successfully blocked");
     }
@@ -71,6 +82,15 @@ public class AdminController {
         return new ResponseEntity<>(userServiceSCRT
                 .getAllUsers(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Get the user by id")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserGetDto> getUserById(
+            @ApiParam(value = "User id") @PathVariable UUID userId) {
+        return new ResponseEntity<>(userServiceSCRT
+                .getUserById(userId), HttpStatus.OK);
+    }
+
 
 
 

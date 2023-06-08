@@ -5,13 +5,11 @@ import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import nure.ua.volunteering_ua.dto.auth.AuthorizationDto;
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
+import nure.ua.volunteering_ua.dto.user.UserGetDto;
 import nure.ua.volunteering_ua.dto.user.UserPageResponse;
 import nure.ua.volunteering_ua.dto.volunteer.VolunteerGetDto;
 import nure.ua.volunteering_ua.exeption.CustomException;
-import nure.ua.volunteering_ua.mapper.CustomerMapper;
-import nure.ua.volunteering_ua.mapper.RequestMapper;
-import nure.ua.volunteering_ua.mapper.UserPageResponseMapper;
-import nure.ua.volunteering_ua.mapper.VolunteeringMapper;
+import nure.ua.volunteering_ua.mapper.*;
 import nure.ua.volunteering_ua.model.System_Status;
 import nure.ua.volunteering_ua.model.user.*;
 import nure.ua.volunteering_ua.repository.customer.CustomerRepository;
@@ -51,10 +49,11 @@ public class UserServiceSCRT {
     private final VolunteeringMapper volunteeringMapper;
     private final CustomerMapper customerMapper;
     private final UserPageResponseMapper userPageResponseMapper;
+    private final UserMapper userMapper;
 
 
     @Autowired
-    public UserServiceSCRT(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, VolunteerRepository volunteerRepository, CustomerRepository customerRepository, UserPageResponseMapper userPageResponseMapper) {
+    public UserServiceSCRT(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, VolunteerRepository volunteerRepository, CustomerRepository customerRepository, UserPageResponseMapper userPageResponseMapper, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -62,6 +61,7 @@ public class UserServiceSCRT {
         this.jwtTokenProvider = jwtTokenProvider;
         this.volunteerRepository = volunteerRepository;
         this.userPageResponseMapper = userPageResponseMapper;
+        this.userMapper = userMapper;
         this.customerMapper = new CustomerMapper(new RequestMapper());
         this.volunteeringMapper = new VolunteeringMapper();
         this.customerRepository = customerRepository;
@@ -127,17 +127,38 @@ public class UserServiceSCRT {
     }
 
 
-    public void blockComplexAdmin(String userName) {
+    public void blockUser(String userName) {
         Optional<User> userDb = userRepository.findUserByUserName(userName);
         userDb.ifPresentOrElse(
                 user -> {
-                    user.setStatus(System_Status.NONACTIVE);
-                    userRepository.save(user);
+                    userRepository.updateUserStatus(System_Status.NONACTIVE.name(), userName);
                 },
                 () -> {
                     throw new CustomException("There is no user with specified name", HttpStatus.NOT_FOUND);
                 }
         );
+    }
+
+    public void unBlockUser(String userName) {
+        Optional<User> userDb = userRepository.findUserByUserName(userName);
+        userDb.ifPresentOrElse(
+                user -> {
+                    userRepository.updateUserStatus(System_Status.ACTIVE.name(), userName);
+                },
+                () -> {
+                    throw new CustomException("There is no user with specified name", HttpStatus.NOT_FOUND);
+                }
+        );
+    }
+
+    public UserGetDto getUserById(UUID id) {
+        return userMapper.apply(userRepository.findById(id)
+                .orElseThrow(
+                        () -> new CustomException(
+                                "There is no product with specified id",
+                                HttpStatus.NOT_FOUND
+                        )
+                ));
     }
 
     public Map<Object, Object> signIn(AuthorizationDto requestDto) throws AuthenticationException {
