@@ -40,13 +40,12 @@ import java.util.Optional;
 public class AdminController {
 
     private final UserServiceSCRT userServiceSCRT;
-    private final BackupService backupService;
+
 
     @Autowired
-    public AdminController(UserServiceSCRT userServiceSCRT, BackupService backupService) {
+    public AdminController(UserServiceSCRT userServiceSCRT) {
         this.userServiceSCRT = userServiceSCRT;
-        this.backupService = backupService;
-    }
+     }
 
     @PostMapping("registerVolunteeringAdmin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
