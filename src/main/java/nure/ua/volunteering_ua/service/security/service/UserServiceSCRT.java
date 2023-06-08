@@ -5,20 +5,24 @@ import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import nure.ua.volunteering_ua.dto.auth.AuthorizationDto;
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
+import nure.ua.volunteering_ua.dto.user.UserPageResponse;
 import nure.ua.volunteering_ua.dto.volunteer.VolunteerGetDto;
 import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.mapper.CustomerMapper;
 import nure.ua.volunteering_ua.mapper.RequestMapper;
+import nure.ua.volunteering_ua.mapper.UserPageResponseMapper;
 import nure.ua.volunteering_ua.mapper.VolunteeringMapper;
 import nure.ua.volunteering_ua.model.System_Status;
 import nure.ua.volunteering_ua.model.user.*;
 import nure.ua.volunteering_ua.repository.customer.CustomerRepository;
-import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
 import nure.ua.volunteering_ua.repository.role.RoleRepository;
 import nure.ua.volunteering_ua.repository.user.UserRepository;
 import nure.ua.volunteering_ua.repository.volunteer.VolunteerRepository;
 import nure.ua.volunteering_ua.service.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,16 +50,18 @@ public class UserServiceSCRT {
     private final CustomerRepository customerRepository;
     private final VolunteeringMapper volunteeringMapper;
     private final CustomerMapper customerMapper;
+    private final UserPageResponseMapper userPageResponseMapper;
 
 
     @Autowired
-    public UserServiceSCRT(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, VolunteerRepository volunteerRepository, CustomerRepository customerRepository) {
+    public UserServiceSCRT(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, VolunteerRepository volunteerRepository, CustomerRepository customerRepository, UserPageResponseMapper userPageResponseMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.volunteerRepository = volunteerRepository;
+        this.userPageResponseMapper = userPageResponseMapper;
         this.customerMapper = new CustomerMapper(new RequestMapper());
         this.volunteeringMapper = new VolunteeringMapper();
         this.customerRepository = customerRepository;
@@ -193,6 +199,11 @@ public class UserServiceSCRT {
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User with username: " + username + " wasn't found, you should authorize firstly"
                 ));
+    }
+
+    public UserPageResponse getAllUsers (int pageNumber, int sizeOfPage, String sortBy){
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
+        return userPageResponseMapper.apply(userRepository.findAll(pageable));
     }
 
 
