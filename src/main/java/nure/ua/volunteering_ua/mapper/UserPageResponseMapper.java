@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class UserPageResponseMapper  implements Function<Page<User>, UserPageResponse> {
+public class UserPageResponseMapper implements Function<Page<User>, UserPageResponse> {
 
     private final UserMapper userMapper;
 
@@ -31,5 +33,18 @@ public class UserPageResponseMapper  implements Function<Page<User>, UserPageRes
                 users.getTotalElements(),
                 users.getTotalPages()
         );
+    }
+
+    public UserPageResponse map(Page<Optional<User>> users, List<User> usersList) {
+        return new UserPageResponse(
+                usersList
+                        .stream()
+                        .map(userMapper)
+                        .collect(Collectors.toList()),
+                users.getNumber(),
+                users.getContent().size(),
+                users.getTotalElements(),
+                users.getTotalPages()
+                );
     }
 }

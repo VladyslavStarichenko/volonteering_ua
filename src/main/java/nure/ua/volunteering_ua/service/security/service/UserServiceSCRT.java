@@ -18,6 +18,7 @@ import nure.ua.volunteering_ua.repository.user.UserRepository;
 import nure.ua.volunteering_ua.repository.volunteer.VolunteerRepository;
 import nure.ua.volunteering_ua.service.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -93,13 +93,13 @@ public class UserServiceSCRT {
         return userMapper.apply(userRepository.save(registeredUser));
     }
 
-    public List<UserGetDto> searchUserByName(String userName) {
-        List<Optional<User>> users = userRepository.searchUserByName(userName);
-        return users.stream()
-                .map(
-                        user -> userMapper.apply(user.orElseThrow(() -> new CustomException("There is no user exists with specified search pattern: ", HttpStatus.NOT_FOUND)))
-                )
-                .collect(Collectors.toList());
+
+
+    public UserPageResponse searchUserByName(String userName, int pageNumber, int sizeOfPage, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
+        Page<User> users = userRepository.searchUserByName(pageable, userName);
+
+        return userPageResponseMapper.apply(users);
     }
 
     public void validateUser(User user) {
@@ -134,9 +134,7 @@ public class UserServiceSCRT {
     public void blockUser(String userName) {
         Optional<User> userDb = userRepository.findUserByUserName(userName);
         userDb.ifPresentOrElse(
-                user -> {
-                    userRepository.updateUserStatus(System_Status.NONACTIVE.name(), userName);
-                },
+                user -> userRepository.updateUserStatus(System_Status.NONACTIVE.name(), userName),
                 () -> {
                     throw new CustomException("There is no user with specified name", HttpStatus.NOT_FOUND);
                 }
@@ -146,9 +144,7 @@ public class UserServiceSCRT {
     public void unBlockUser(String userName) {
         Optional<User> userDb = userRepository.findUserByUserName(userName);
         userDb.ifPresentOrElse(
-                user -> {
-                    userRepository.updateUserStatus(System_Status.ACTIVE.name(), userName);
-                },
+                user -> userRepository.updateUserStatus(System_Status.ACTIVE.name(), userName),
                 () -> {
                     throw new CustomException("There is no user with specified name", HttpStatus.NOT_FOUND);
                 }
@@ -165,15 +161,6 @@ public class UserServiceSCRT {
                 ));
     }
 
-    public User getUserByIdInternal(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(
-                        () -> new CustomException(
-                                "There is no product with specified id",
-                                HttpStatus.NOT_FOUND
-                        )
-                );
-    }
 
     public Map<Object, Object> signIn(AuthorizationDto requestDto) throws AuthenticationException {
         String username = requestDto.getUsername();

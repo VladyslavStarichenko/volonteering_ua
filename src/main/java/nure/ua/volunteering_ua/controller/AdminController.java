@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +32,7 @@ public class AdminController {
     @Autowired
     public AdminController(UserServiceSCRT userServiceSCRT) {
         this.userServiceSCRT = userServiceSCRT;
-     }
+    }
 
     @PostMapping("registerVolunteeringAdmin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -74,7 +71,7 @@ public class AdminController {
     public ResponseEntity<UserPageResponse> getAllProducts(
             @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
             @ApiParam(value = "Page size") @PathVariable int pageSize,
-            @ApiParam(value = "Sort by parameter")  @PathVariable(required = false) String sortBy
+            @ApiParam(value = "Sort by parameter") @PathVariable(required = false) String sortBy
 
     ) {
         if (sortBy.isBlank()) {
@@ -93,15 +90,19 @@ public class AdminController {
     }
 
     @ApiOperation(value = "Search user by name")
-    @GetMapping("/user/search/{userName}")
-    public ResponseEntity<List<UserGetDto>> getUserById(
-            @ApiParam(value = "User name") @PathVariable String userName) {
+    @GetMapping("/user/search/{userName}/{pageNumber}/{pageSize}/{sortBy}")
+    public ResponseEntity<UserPageResponse> getUserById(
+            @ApiParam(value = "User name") @PathVariable String userName,
+            @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by parameter") @PathVariable(required = false) String sortBy
+    ) {
+        if (sortBy.isBlank()) {
+            sortBy = "user_name";
+        }
         return new ResponseEntity<>(userServiceSCRT
-                .searchUserByName(userName), HttpStatus.OK);
+                .searchUserByName(userName, pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
-
-
-
 
 
 }

@@ -4,13 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.event.EventCreateDto;
 import nure.ua.volunteering_ua.dto.event.EventGetDto;
 import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.dto.event.EventParticipateResponse;
 import nure.ua.volunteering_ua.service.event.EventService;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +69,7 @@ public class EventController {
         return new ResponseEntity<>(eventService.participate(customerName, eventId), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Unparticipate the event")
+    @ApiOperation(value = "Un-participate the event")
     @PreAuthorize("hasAnyRole('ROLE_CUSTOMER')")
     @PutMapping("/un-participate/{customerName}/event/{eventId}")
     public ResponseEntity<EventParticipateResponse> unParticipate(
