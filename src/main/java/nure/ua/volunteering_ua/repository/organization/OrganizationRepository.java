@@ -2,6 +2,7 @@ package nure.ua.volunteering_ua.repository.organization;
 
 
 import nure.ua.volunteering_ua.model.user.Organization;
+import nure.ua.volunteering_ua.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -48,7 +49,10 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
   void updatePaymentMethod(String stripe_api_key, String stripe_public_key, String stripe_secret_key, Long id);
 
 
-  @Query(value = "SELECT * FROM organization o WHERE o.name LIKE %?%", nativeQuery = true)
-  List<Optional<Organization>> searchOrganizationByName(String organizationName);
+//  @Query(value = "SELECT * FROM organization o WHERE o.name LIKE %?%", nativeQuery = true)
+//  List<Optional<Organization>> searchOrganizationByName(String organizationName);
+
+  @Query(value = "SELECT * FROM organization  WHERE name  LIKE %?1%", nativeQuery = true)
+  Page<Organization> searchOrganizationByNameIsIgnoreCase(Pageable pageable, String name);
 
 }

@@ -98,7 +98,6 @@ public class UserServiceSCRT {
     public UserPageResponse searchUserByName(String userName, int pageNumber, int sizeOfPage, String sortBy) {
         Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
         Page<User> users = userRepository.searchUserByName(pageable, userName);
-
         return userPageResponseMapper.apply(users);
     }
 

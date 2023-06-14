@@ -13,6 +13,7 @@ import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
 import nure.ua.volunteering_ua.service.customer.CustomerService;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -91,13 +92,11 @@ public class OrganizationService {
                 );
     }
 
-    public List<OrganizationGetDto> searchOrganizationByName(String organizationName) {
-        List<Optional<Organization>> users = organizationRepository.searchOrganizationByName(organizationName);
-        return users.stream()
-                .map(
-                        organization -> organizationMapper.apply(organization.orElseThrow(() -> new CustomException("There is no organization exists with specified search pattern: ", HttpStatus.NOT_FOUND)))
-                )
-                .collect(Collectors.toList());
+    public OrganizationPageResponse searchOrganizationByName(String organizationName, int pageNumber, int sizeOfPage, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
+        Page<Organization> organizations = organizationRepository.searchOrganizationByNameIsIgnoreCase(pageable, organizationName);
+        return organizationPageMapper.apply(organizations);
+
     }
 
     public Organization getOrganizationByNameInternalUsage(String name) {

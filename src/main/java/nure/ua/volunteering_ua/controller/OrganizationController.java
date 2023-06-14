@@ -150,10 +150,17 @@ public class OrganizationController {
     }
 
     @ApiOperation(value = "Search organization by name")
-    @GetMapping("/organization/search/{organizationName}")
-    public ResponseEntity<List<OrganizationGetDto>> getUserById(
-            @ApiParam(value = "Organization name") @PathVariable String organizationName) {
+    @GetMapping("/organization/search/{organizationName}/{pageNumber}/{pageSize}/{sortBy}")
+    public ResponseEntity<OrganizationPageResponse> getUserById(
+            @ApiParam(value = "Organization name") @PathVariable String organizationName,
+            @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by parameter")  @PathVariable(required = false) String sortBy
+    ) {
+        if (sortBy.isBlank()) {
+            sortBy = "name";
+        }
         return new ResponseEntity<>(organizationService
-                .searchOrganizationByName(organizationName), HttpStatus.OK);
+                .searchOrganizationByName(organizationName,pageNumber,pageSize,sortBy), HttpStatus.OK);
     }
 }
