@@ -37,50 +37,28 @@ public class StatisticService {
         OrganizationGetDto organization = organizationService.getOrganizationByName(organizationName);
         BalanceDto balance = stripeClient.getBalance(organizationName);
         List<TransactionDto> transactions = stripeClient.getTransactions(organizationName, limitForTransactions);
-        int transactionsAmount = limitForTransactions;
         if(limitForTransactions > transactions.size()){
             limitForTransactions = transactions.size();
         }
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Document document = new Document();
-
-            // Create a PdfWriter to write the document to the output stream
             PdfWriter.getInstance(document, outputStream);
-
-            // Open the document
             document.open();
-
-            // Add title
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD);
             Paragraph titleParagraph = new Paragraph(organization.getName(), titleFont);
             titleParagraph.setAlignment(Element.ALIGN_CENTER);
             document.add(titleParagraph);
-
-            // Add organization logo
             Image logoImage = Image.getInstance(organization.getImageURL());
             logoImage.setAlignment(Element.ALIGN_RIGHT);
             logoImage.scaleAbsolute(80, 80);
             document.add(logoImage);
-
-            // Add organization statistics
             addSection(document, "Organization Statistics", formatStatistics(organization.getStatistic()));
-
-            // Add organization rating
             addSection(document, "Organization Rating", String.valueOf(organization.getRating()));
-
-            // Add balance
             addSection(document, "Balance", formatBalance(balance));
-
-            // Add transactions
             addSection(document, "Transactions", formatTransactions(transactions, limitForTransactions));
-
-            // Close the document
             document.close();
-
-            // Return the PDF data as a byte array
             return outputStream.toByteArray();
         } catch (DocumentException | IOException e) {
-            // Handle any exceptions that occurred during PDF generation
             e.printStackTrace();
             throw new CustomException("There was an error during statistic document creation", HttpStatus.BAD_REQUEST);
         }
@@ -132,13 +110,14 @@ public class StatisticService {
             TransactionDto transaction = transactions.get(i);
             checkTransaction(transaction);
             sb.append("Transaction ID: ").append(transaction.getId()).append("\n");
-            sb.append("Amount: ").append(transaction.getAmount()).append(" ").append(transaction.getCurrency()).append("\n");
+            sb.append("Amount: ").append(transaction.getAmount()).append(" ")
+                    .append(transaction.getCurrency()).append("\n");
             sb.append("Application: ").append(transaction.getApplication()).append("\n");
             sb.append("Customer Email: ").append(transaction.getCustomerEmail()).append("\n");
             sb.append("Description: ").append(transaction.getDescription());
 
-            if (i < transactions.size() - 2) {
-                sb.append("\n\n");
+            if (i < transactions.size() - 1) {
+                sb.append("\n");
             }
         }
 

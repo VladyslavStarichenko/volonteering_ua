@@ -68,6 +68,7 @@ public class UserServiceSCRT {
         this.customerRepository = customerRepository;
     }
 
+
     public VolunteerGetDto signUpVolunteer(User user) {
         user.setSocialCategory(SocialCategory.NO_CATEGORY);
         validateUser(user);
@@ -101,7 +102,7 @@ public class UserServiceSCRT {
                 .collect(Collectors.toList());
     }
 
-    private void validateUser(User user) {
+    public void validateUser(User user) {
         if (userRepository.existsByUserName(user.getUserName())) {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -162,6 +163,16 @@ public class UserServiceSCRT {
                                 HttpStatus.NOT_FOUND
                         )
                 ));
+    }
+
+    public User getUserByIdInternal(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(
+                        () -> new CustomException(
+                                "There is no product with specified id",
+                                HttpStatus.NOT_FOUND
+                        )
+                );
     }
 
     public Map<Object, Object> signIn(AuthorizationDto requestDto) throws AuthenticationException {

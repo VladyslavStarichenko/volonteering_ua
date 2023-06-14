@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import nure.ua.volunteering_ua.dto.location.LocationDto;
 import nure.ua.volunteering_ua.model.Event;
 
+import java.util.List;
+
 @Entity
 @Table(name = "location")
 @Data
@@ -27,8 +29,8 @@ public class Location {
     @OneToOne(mappedBy = "location")
     private Organization organization;
 
-    @OneToOne(mappedBy = "location")
-    private Event event;
+    @OneToMany(mappedBy = "location")
+    private List<Event> event;
 
     public Location(LocationDto locationDto) {
         this.latitude = locationDto.getLatitude();

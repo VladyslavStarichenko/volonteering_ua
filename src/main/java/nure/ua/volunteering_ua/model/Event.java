@@ -41,8 +41,8 @@ public class Event extends BaseEntity {
     @OneToMany(mappedBy = "event_warehouse")
     private List<EventProduct> products;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name="location_id", nullable=false)
     private Location location;
 
     @ManyToMany(mappedBy = "events")
