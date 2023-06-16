@@ -184,6 +184,7 @@ public class OrganizationService {
                     });
             org.setName(organizationCreateDto.getName());
             org.setLocation(location);
+            org.setDescription(organizationCreateDto.getDescription());
             org.setImageURL(organizationCreateDto.getImageURL());
             org.setVolunteeringType(organizationCreateDto.getVolunteeringType());
             return organizationRepository.save(org);

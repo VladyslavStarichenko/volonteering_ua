@@ -26,8 +26,8 @@ public class Location {
 
     private String address;
 
-    @OneToOne(mappedBy = "location")
-    private Organization organization;
+    @OneToMany(mappedBy = "location")
+    private List<Organization> organization;
 
     @OneToMany(mappedBy = "location")
     private List<Event> event;

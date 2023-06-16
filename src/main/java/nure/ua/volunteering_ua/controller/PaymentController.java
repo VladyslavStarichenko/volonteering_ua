@@ -34,25 +34,30 @@ public class PaymentController {
 
     @GetMapping("/transactions/{organizationName}/{limit}")
     public List<TransactionDto> getTransactions(
-            @ApiParam(value = "Organization name to check transactions") @PathVariable String organizationName,
-            @ApiParam(value = "Limit of transactions to retrieve") @PathVariable int limit
+            @ApiParam(value = "Organization name to check transactions")
+            @PathVariable String organizationName,
+            @ApiParam(value = "Limit of transactions to retrieve")
+            @PathVariable int limit
     ) throws StripeException {
         return stripeClient.getTransactions(organizationName, limit);
     }
 
     @GetMapping("/stripeAccess/{organizationName}")
     public ResponseEntity<PaymentMethodDto> getStripeKeys(
-            @ApiParam(value = "Organization name to check transactions") @PathVariable String organizationName
+            @ApiParam(value = "Organization name to check transactions")
+            @PathVariable String organizationName
     ) throws StripeException {
         return new ResponseEntity<>(stripeClient.getStripeKey(organizationName),HttpStatus.OK);
     }
 
     @PutMapping("/addPaymentMethod")
     public ResponseEntity<String> addPayment(
-            @ApiParam(value = "Payment details") @RequestBody PaymentMethodAddDto payment
+            @ApiParam(value = "Payment details")
+            @RequestBody PaymentMethodAddDto payment
     ) {
         stripeClient.updatePayment(payment);
-        return new ResponseEntity<>("Payment details are successfully updated", HttpStatus.CREATED);
+        return new ResponseEntity<>("Payment details are successfully updated",
+                HttpStatus.CREATED);
     }
 
     @PostMapping("/charge")
@@ -62,7 +67,8 @@ public class PaymentController {
         try {
             return this.stripeClient.chargeNewCard(chargeCustomerDto);
         } catch (Exception e) {
-            throw new CustomException("Payment was failed\n" + e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new CustomException("Payment was failed\n" + e.getMessage(),
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -45,8 +45,8 @@ public class Organization extends BaseEntity {
     @OneToMany(mappedBy = "organization")
     private List<Aid_Request> requests;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name="location_id", nullable=false)
     private Location location;
 
     @OneToMany(mappedBy = "organization")

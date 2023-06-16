@@ -93,8 +93,6 @@ public class UserServiceSCRT {
         return userMapper.apply(userRepository.save(registeredUser));
     }
 
-
-
     public UserPageResponse searchUserByName(String userName, int pageNumber, int sizeOfPage, String sortBy) {
         Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
         Page<User> users = userRepository.searchUserByName(pageable, userName);
@@ -208,8 +206,6 @@ public class UserServiceSCRT {
                     "role", user.getRole().getName(),
                     "email", user.getEmail());
         }
-
-
 
 
     }
