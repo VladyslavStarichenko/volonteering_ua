@@ -16,6 +16,7 @@ import java.util.List;
 public class EventGetDto {
 
     private long id;
+    private long organizationId;
     private String name;
     private String description;
     private Date startDate;
