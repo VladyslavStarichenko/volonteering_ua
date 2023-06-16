@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -68,8 +69,8 @@ public class EventService {
                 "\n Capacity: " + event.getCapacity();
 
         String topic = "New event comes.";
-        event.setLocation(checkLocation(eventCreateDto.getLocation()));
         Organization eventOrganization = getEventOrganization(userServiceSCRT.getCurrentLoggedInUser().getOrganization().getName());
+        event.setLocation(checkLocation(eventCreateDto.getLocation(),eventOrganization.getLocation().getId()));
         event.setOrganization(eventOrganization);
         notificationService.createEventNotification(eventOrganization.getSubscribers(), message, topic);
         return eventMapper.apply(eventRepository.save(event));
@@ -77,9 +78,11 @@ public class EventService {
 
     public EventGetDto updateEvent(Long eventID, EventCreateDto eventCreateDto) {
 
+        Organization organization = userServiceSCRT.getCurrentLoggedInUser().getOrganization();
+        Long idOfLocationOfOrganization = organization.getLocation().getId();
         Event event = eventRepository.findById(eventID)
                 .orElseThrow(() -> new CustomException("There is no event with specified Id", HttpStatus.NOT_FOUND));
-        event.setLocation(checkLocation(eventCreateDto.getLocation()));
+        event.setLocation(checkLocation(eventCreateDto.getLocation(),idOfLocationOfOrganization ));
         event.setOrganization(getEventOrganization(userServiceSCRT.getCurrentLoggedInUser().getOrganization().getName()));
         event.setDescription(eventCreateDto.getDescription());
         event.setStartDate(eventCreateDto.getStartDate());
@@ -93,10 +96,26 @@ public class EventService {
         return eventMapper.apply(eventRepository.save(event));
     }
 
-    public Location checkLocation(LocationDto locationDto) {
-        return locationRepository
-                .getLocationsByAddress(locationDto.getAddress())
-                .orElseGet(() -> locationRepository.save(new Location(locationDto)));
+
+
+    public Location checkLocation(LocationDto locationDto, Long idOfLocationOfOrganization) {
+        Location location;
+        Optional<Location> locationsByAddress = locationRepository.getLocationsByAddress(locationDto.getAddress());
+        if(locationsByAddress.isPresent()){
+            location = locationsByAddress.get();
+            if(location.getId() == idOfLocationOfOrganization){
+                return location;
+            }
+            return locationRepository
+                    .getLocationsByAddress(locationDto.getAddress())
+                    .orElseGet(() -> locationRepository.save(new Location(locationDto)));
+
+        }else {
+            return locationRepository
+                    .getLocationsByAddress(locationDto.getAddress())
+                    .orElseGet(() -> locationRepository.save(new Location(locationDto)));
+        }
+
     }
 
     public Organization getEventOrganization(String organizationName) {
