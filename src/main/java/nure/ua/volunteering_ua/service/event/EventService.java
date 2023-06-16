@@ -99,24 +99,21 @@ public class EventService {
 
 
     public Location checkLocation(LocationDto locationDto, Long idOfLocationOfOrganization) {
-        Location location;
-        Optional<Location> locationsByAddress = locationRepository.getLocationsByAddress(locationDto.getAddress());
-        if(locationsByAddress.isPresent()){
-            location = locationsByAddress.get();
-            if(location.getId() == idOfLocationOfOrganization){
-                return location;
-            }
-            return locationRepository
-                    .getLocationsByAddress(locationDto.getAddress())
-                    .orElseGet(() -> locationRepository.save(new Location(locationDto)));
+        Optional<Location> locationsByAddress = locationRepository.getLocationsByAddress(locationDto.getAddress())
+                .stream()
+                .findFirst()
+                .orElseGet(() -> {
+                    return Optional.of(new Location(locationDto));
+                } );
 
-        }else {
-            return locationRepository
-                    .getLocationsByAddress(locationDto.getAddress())
-                    .orElseGet(() -> locationRepository.save(new Location(locationDto)));
-        }
-
+        return locationsByAddress.filter(loc -> loc.getId() == idOfLocationOfOrganization)
+                .orElseGet(() -> {
+                    Location newLocation = new Location(locationDto);
+                    return locationRepository.save(newLocation);
+                });
     }
+
+
 
     public Organization getEventOrganization(String organizationName) {
         return organizationService.getOrganizationByNameInternalUsage(organizationName);

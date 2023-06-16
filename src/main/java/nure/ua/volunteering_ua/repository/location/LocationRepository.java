@@ -4,10 +4,11 @@ import nure.ua.volunteering_ua.model.user.Location;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface LocationRepository extends PagingAndSortingRepository<Location, Long> {
-    Optional<Location> getLocationsByAddress(String address);
+    List<Optional<Location>> getLocationsByAddress(String address);
 
 }

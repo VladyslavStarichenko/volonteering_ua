@@ -177,6 +177,9 @@ public class OrganizationService {
                 .findAllByOrg_admin(userServiceSCRT.getCurrentLoggedInUser().getId());
         Organization organization = organization2Update.map(org -> {
             Location location = locationRepository.getLocationsByAddress(organizationCreateDto.getLocation().getAddress())
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(() -> new CustomException("There is no location found", HttpStatus.BAD_REQUEST))
                     .orElseGet(() -> {
                         Location newLocation = new Location(organizationCreateDto.getLocation());
                         locationRepository.save(newLocation);
