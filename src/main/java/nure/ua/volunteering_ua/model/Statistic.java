@@ -57,7 +57,7 @@ public class Statistic {
         if(data == 0){
             return  0.0;
         }else {
-            return (double) requestsCount / data * 100;
+            return (double) data / requestsCount * 100;
         }
     }
 
