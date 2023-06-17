@@ -87,6 +87,7 @@ public class EventService {
         event.setDescription(eventCreateDto.getDescription());
         event.setStartDate(eventCreateDto.getStartDate());
         event.setEndDate(eventCreateDto.getEndDate());
+        event.setName(eventCreateDto.getName());
         String message = "An event " + event.getName() + " has changed.\n" +
                 "Description: " + event.getDescription() +
                 "\n Dates: " + event.getStartDate() + " - " + event.getEndDate() +
