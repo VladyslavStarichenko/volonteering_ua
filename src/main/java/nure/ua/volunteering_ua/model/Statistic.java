@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import nure.ua.volunteering_ua.model.user.Organization;
 
+import java.text.DecimalFormat;
+
 
 @Data
 public class Statistic {
@@ -43,6 +45,11 @@ public class Statistic {
             approvedStatistics = checkStatisticData(countApproved,requestsCount);
             verificationStatistics = checkStatisticData(countVerification,requestsCount);
         }
+
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        rating = Double.parseDouble(decimalFormat.format(rating));
+        approvedStatistics = Double.parseDouble(decimalFormat.format(approvedStatistics));
+        verificationStatistics = Double.parseDouble(decimalFormat.format(verificationStatistics));
         return new Statistic(requestsCount,rating, verificationStatistics, approvedStatistics);
     }
 
