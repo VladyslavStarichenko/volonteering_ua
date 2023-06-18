@@ -4,7 +4,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import nure.ua.volunteering_ua.dto.request.AidRequestPageResponse;
+import nure.ua.volunteering_ua.dto.request.RequestGetDto;
 import nure.ua.volunteering_ua.dto.volunteer.VolunteerGetDto;
+import nure.ua.volunteering_ua.dto.volunteer.VolunteerPageResponse;
 import nure.ua.volunteering_ua.service.volunteer.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,6 +62,28 @@ public class VolunteerController {
             @ApiParam(value = "Volunteer name") @PathVariable String volunteerName
     ) {
         return new ResponseEntity<>(volunteerService.getVolunteerByName(volunteerName), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Get all volunteers")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN', 'ROLE_ORGANIZATION_ADMIN')")
+    @GetMapping("/allVolunteers/{pageNumber}/{pageSize}/{sortBy}")
+    public ResponseEntity<VolunteerPageResponse> getAllVolunteers(
+            @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by parameter") @PathVariable String sortBy
+    ) {
+        if (sortBy.isBlank()) {
+            sortBy = "user_id";
+        }
+        return new ResponseEntity<>(volunteerService.getAllVolunteers(pageNumber, pageSize, sortBy), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Get the volunteer by id")
+    @GetMapping("volunteerById/{volunteerId}")
+    public ResponseEntity<VolunteerGetDto> getVolunteerById(
+            @ApiParam(value = "Volunteer id") @PathVariable Long volunteerId
+    ) {
+        return new ResponseEntity<>(volunteerService.getVolunteerById(volunteerId), HttpStatus.OK);
     }
 
 }

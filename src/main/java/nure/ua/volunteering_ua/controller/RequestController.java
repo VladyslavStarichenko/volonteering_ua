@@ -50,7 +50,7 @@ public class RequestController {
         return new ResponseEntity<>(requestService.finish(reqConfirm.getId(), reqConfirm.getCode()), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get all all requests")
+    @ApiOperation(value = "Get all requests")
     @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN', 'ROLE_ORGANIZATION_ADMIN')")
     @GetMapping("/allRequests/{pageNumber}/{pageSize}")
     public ResponseEntity<AidRequestPageResponse> getAllRequests(
@@ -70,7 +70,7 @@ public class RequestController {
         return new ResponseEntity<>(requestService.getAllRequestsByCustomerId(customerId, pageNumber, pageSize), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get all all requests by organization")
+    @ApiOperation(value = "Get all approved requests by organization")
     @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ORGANIZATION_ADMIN')")
     @GetMapping("/organization/allRequests/{organizationName}/{pageNumber}/{pageSize}/{sortBy}")
     public ResponseEntity<AidRequestPageResponse> getAllRequestsOrganization(
@@ -80,7 +80,7 @@ public class RequestController {
             @ApiParam(value = "Sort by") @PathVariable String sortBy
     ) {
         if (sortBy.isBlank()) {
-            sortBy = "volunteeringType";
+            sortBy = "volunteering_type";
         }
         return new ResponseEntity<>(requestService.getAllRequestsByOrganization(pageNumber, pageSize, sortBy, organizationName), HttpStatus.OK);
     }
@@ -95,7 +95,7 @@ public class RequestController {
             @ApiParam(value = "Sort by") @PathVariable String sortBy
     ) {
         if (sortBy.isBlank()) {
-            sortBy = "volunteering_type";
+            sortBy = "queue_number";
         }
         return new ResponseEntity<>(requestService.getAllRequestsByVolunteer(volunteerId, pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
