@@ -85,6 +85,21 @@ public class RequestController {
         return new ResponseEntity<>(requestService.getAllRequestsByOrganization(pageNumber, pageSize, sortBy, organizationName), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Get all all requests by volunteer")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ORGANIZATION_ADMIN')")
+    @GetMapping("/organization/allRequests/{volunteerId}/{pageNumber}/{pageSize}/{sortBy}")
+    public ResponseEntity<AidRequestPageResponse> getAllRequestsByVolunteer(
+            @ApiParam(value = "Volunteer id") @PathVariable Long volunteerId,
+            @ApiParam(value = "Page number to show") @PathVariable int pageNumber,
+            @ApiParam(value = "Page size") @PathVariable int pageSize,
+            @ApiParam(value = "Sort by") @PathVariable String sortBy
+    ) {
+        if (sortBy.isBlank()) {
+            sortBy = "volunteeringType";
+        }
+        return new ResponseEntity<>(requestService.getAllRequestsByVolunteer(pageNumber, pageSize, sortBy, volunteerId), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "Get the request by id")
     @GetMapping("/{requestId}")
     public ResponseEntity<RequestGetDto> getRequestsById(

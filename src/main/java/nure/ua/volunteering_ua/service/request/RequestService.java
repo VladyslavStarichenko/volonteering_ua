@@ -169,6 +169,11 @@ public class RequestService {
         return requestPageMapper.apply(pageResponse);
     }
 
+    public AidRequestPageResponse getAllRequestsByVolunteer(int pageNumber, int sizeOfPage, String sortBy, Long id) {
+        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
+        Page<Aid_Request> pageResponse = aidRequestRepository.getAid_RequestByVolunteer(pageable, id);
+        return requestPageMapper.apply(pageResponse);
+    }
     public AidRequestPageResponse getAllRequests(int pageNumber, int sizeOfPage) {
         Pageable pageable = PageRequest.of(pageNumber, sizeOfPage);
         Page<Aid_Request> allRequests = aidRequestRepository.getAll(pageable);

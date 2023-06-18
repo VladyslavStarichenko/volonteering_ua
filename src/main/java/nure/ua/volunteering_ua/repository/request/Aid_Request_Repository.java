@@ -15,6 +15,9 @@ public interface Aid_Request_Repository extends PagingAndSortingRepository<Aid_R
 
   Page<Aid_Request> getAid_RequestByOrganization_Name(Pageable pageable, String organizationName);
 
+  @Query(value = "SELECT * FROM request r WHERE r.organization_id IN (SELECT ov.organization_id FROM organization_volunteer ov WHERE ov.volunteer_id =?)", nativeQuery = true)
+  Page<Aid_Request> getAid_RequestByVolunteer(Pageable pageable, Long volunteerId);
+
   List<Aid_Request> getAllByOrganization_Name(String organizationName);
 
   @Query(value = "SELECT * FROM request", nativeQuery = true)
