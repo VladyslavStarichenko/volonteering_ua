@@ -1,6 +1,7 @@
 package nure.ua.volunteering_ua.service.notification;
 
 import nure.ua.volunteering_ua.dto.notification.NotificationCreateDto;
+import nure.ua.volunteering_ua.dto.notification.NotificationCreateDto2;
 import nure.ua.volunteering_ua.dto.notification.NotificationDto;
 import nure.ua.volunteering_ua.dto.notification.NotificationPageResponse;
 import nure.ua.volunteering_ua.exeption.CustomException;
@@ -121,9 +122,48 @@ public class NotificationService {
 
     }
 
-    public void createNotification(NotificationDto notificationDto) {
+    public void createNotification(NotificationCreateDto2 notificationDto) {
         Customer customer = customerService.getCustomerByNameInternal(notificationDto.getCustomerUsername());
-        Notification notification = new Notification(customer, notificationDto.getMessage(), notificationDto.getTitle());
-        notificationRepository.save(notification);
+        List<Organization> subscriptions = customer.getSubscriptions();
+        User currentLoggedInUser = userServiceSCRT.getCurrentLoggedInUser();
+        Organization organization = currentLoggedInUser.getOrganization();
+        String role = currentLoggedInUser.getRole().getName();
+
+        subscriptions.stream()
+                .filter(org -> org.getName().equals(notificationDto.getOrganizationName()))
+                .findAny()
+                .ifPresentOrElse(
+                        org -> {
+                            if (role.equals("ROLE_ORGANIZATION_ADMIN")) {
+                                if (organization != null) {
+                                    if (organization.getName().equals(notificationDto.getOrganizationName())) {
+                                        Notification notification = new Notification(customer, notificationDto.getMessage(), notificationDto.getTitle());
+                                        notificationRepository.save(notification);
+                                    } else {
+                                        throw new CustomException("You're not an admin of this organization", HttpStatus.BAD_REQUEST);
+                                    }
+                                }
+                            } else if (role.equals("ROLE_VOLUNTEER")) {
+                                volunteerService.getAllVolunteersInternalUsage(notificationDto.getOrganizationName())
+                                        .stream()
+                                        .filter(volunteer -> volunteer.getName().equals(currentLoggedInUser.getUserName()))
+                                        .findAny()
+                                        .orElseGet(() -> {
+                                            Notification notification = new Notification(customer, notificationDto.getMessage(), notificationDto.getTitle());
+                                            notificationRepository.save(notification);
+                                            throw new CustomException("You're not volunteering in that organization", HttpStatus.FORBIDDEN);
+                                        });
+                            } else {
+                                throw new CustomException("You're not allowed to create notification", HttpStatus.FORBIDDEN);
+                            }
+                        },
+                        () -> {
+                            throw new CustomException("This user is a subscriber of organization", HttpStatus.BAD_REQUEST);
+                        }
+                );
+
+
+
+
     }
 }

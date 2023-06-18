@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import nure.ua.volunteering_ua.dto.notification.NotificationCreateDto;
+import nure.ua.volunteering_ua.dto.notification.NotificationCreateDto2;
 import nure.ua.volunteering_ua.dto.notification.NotificationDto;
 import nure.ua.volunteering_ua.dto.notification.NotificationPageResponse;
 import nure.ua.volunteering_ua.service.notification.NotificationService;
@@ -65,7 +66,7 @@ public class NotificationController {
     @PostMapping("/create")
     public ResponseEntity<String> createNotification(
             @ApiParam(value = "Notification object to create", required = true)
-            @RequestBody NotificationDto notificationDto
+            @RequestBody NotificationCreateDto2 notificationDto
     ) {
         notificationService.createNotification(notificationDto);
         return new ResponseEntity<>(
