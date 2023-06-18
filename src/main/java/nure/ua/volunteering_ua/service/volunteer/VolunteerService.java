@@ -17,7 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VolunteerService {
@@ -95,5 +97,13 @@ public class VolunteerService {
         Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
         Page<Volunteer> pageResponse = volunteerRepository.findAll(pageable);
         return volunteerPageMapper.apply(pageResponse);
+    }
+
+
+    public List<VolunteerGetDto> getAllVolunteersInternalUsage(String organizationName) {
+      return volunteerRepository.getAllByOrganizationName(organizationName)
+              .stream()
+              .map(volunteeringMapper)
+              .collect(Collectors.toList());
     }
 }

@@ -9,10 +9,12 @@ import nure.ua.volunteering_ua.mapper.notification.NotificationPageMapper;
 import nure.ua.volunteering_ua.model.Notification;
 import nure.ua.volunteering_ua.model.user.Customer;
 import nure.ua.volunteering_ua.model.user.Organization;
+import nure.ua.volunteering_ua.model.user.User;
 import nure.ua.volunteering_ua.repository.notification.NotificationRepository;
 import nure.ua.volunteering_ua.service.customer.CustomerService;
 import nure.ua.volunteering_ua.service.organization.OrganizationService;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
+import nure.ua.volunteering_ua.service.volunteer.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,15 +37,17 @@ public class NotificationService {
     private final NotificationPageMapper notificationPageMapper;
     private final OrganizationService organizationService;
     private final UserServiceSCRT userServiceSCRT;
+    private final VolunteerService volunteerService;
 
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, CustomerService customerService, NotificationMapper notificationMapper, NotificationPageMapper notificationPageMapper, OrganizationService organizationService, UserServiceSCRT userServiceSCRT) {
+    public NotificationService(NotificationRepository notificationRepository, CustomerService customerService, NotificationMapper notificationMapper, NotificationPageMapper notificationPageMapper, OrganizationService organizationService, UserServiceSCRT userServiceSCRT, VolunteerService volunteerService) {
         this.notificationRepository = notificationRepository;
         this.customerService = customerService;
         this.notificationMapper = notificationMapper;
         this.notificationPageMapper = notificationPageMapper;
         this.organizationService = organizationService;
         this.userServiceSCRT = userServiceSCRT;
+        this.volunteerService = volunteerService;
     }
 
     public List<Notification> getAllCustomerNotificationsInternal() {
@@ -78,20 +82,42 @@ public class NotificationService {
     }
 
     public void createNotification(NotificationCreateDto notificationCreateDto, String organizationName) {
-        Organization organization = userServiceSCRT.getCurrentLoggedInUser().getOrganization();
-        if(organization != null){
-            if(organization.getName().equals(organizationName)){
-                List<Customer> customers = organizationService.getOrganizationByNameInternalUsage(organizationName).getSubscribers();
-                customers
-                        .forEach(customer -> {
+        User currentLoggedInUser = userServiceSCRT.getCurrentLoggedInUser();
+        String role = currentLoggedInUser.getRole().getName();
+        Organization organization = currentLoggedInUser.getOrganization();
+        if(role.equals("ROLE_ORGANIZATION_ADMIN")){
+            if(organization != null){
+                if(organization.getName().equals(organizationName)){
+                    List<Customer> customers = organizationService.getOrganizationByNameInternalUsage(organizationName).getSubscribers();
+                    customers
+                            .forEach(customer -> {
+                                Notification notification = new Notification(customer, notificationCreateDto.getMessage(), notificationCreateDto.getTitle());
+                                notificationRepository.save(notification);
+                            });
+                }
+                else {
+                    throw new CustomException("You're not an admin of this organization", HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        else if(role.equals("ROLE_VOLUNTEER")){
+            volunteerService.getAllVolunteersInternalUsage(organizationName)
+                    .stream()
+                    .filter(volunteer -> volunteer.getName().equals(currentLoggedInUser.getUserName()))
+                    .findAny()
+                    .orElseGet(() -> {
+                        List<Customer> customers = organizationService.getOrganizationByNameInternalUsage(organizationName).getSubscribers();
+                        customers.forEach(customer -> {
                             Notification notification = new Notification(customer, notificationCreateDto.getMessage(), notificationCreateDto.getTitle());
                             notificationRepository.save(notification);
                         });
-            }
-            else {
-                throw new CustomException("You're not an admin of this organization", HttpStatus.BAD_REQUEST);
-            }
+                        throw new CustomException("You're not volunteering in that organization", HttpStatus.FORBIDDEN);
+                    });
         }
+        else {
+            throw new CustomException("You're not allowed to create notification",HttpStatus.FORBIDDEN);
+        }
+
 
     }
 
