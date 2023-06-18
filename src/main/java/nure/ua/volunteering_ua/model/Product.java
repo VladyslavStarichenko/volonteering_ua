@@ -11,6 +11,7 @@ import nure.ua.volunteering_ua.model.user.Organization;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,8 +35,8 @@ public class Product extends BaseEntity {
 
     private String image;
 
-    @OneToOne(mappedBy = "product")
-    private EventProduct eventProduct;
+    @OneToMany(mappedBy = "product")
+    private List<EventProduct> eventProduct;
     @ManyToOne
     @JoinColumn(name = "organization_id",nullable = false)
     private Organization organization_warehouse;

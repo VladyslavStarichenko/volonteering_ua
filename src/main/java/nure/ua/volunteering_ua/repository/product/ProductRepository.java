@@ -9,6 +9,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
     @Modifying
@@ -30,6 +32,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
     @Query(value = "delete FROM product where id=?", nativeQuery = true)
     void deleteById(Long id);
 
-
-
+    @Query(value = "SELECT * FROM product p WHERE p.id=? LIMIT 1", nativeQuery = true)
+    Optional<Product> findProductById(Long id);
 }

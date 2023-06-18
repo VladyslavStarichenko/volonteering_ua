@@ -1,6 +1,5 @@
 package nure.ua.volunteering_ua.service.event;
 
-import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.dto.event.EventParticipateResponse;
 import nure.ua.volunteering_ua.dto.location.LocationDto;
@@ -20,7 +19,6 @@ import nure.ua.volunteering_ua.service.customer.CustomerService;
 import nure.ua.volunteering_ua.service.notification.NotificationService;
 import nure.ua.volunteering_ua.service.organization.OrganizationService;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -161,7 +157,7 @@ public class EventService {
     }
 
     public Event getEventByIdInternal(Long eventId) {
-        return eventRepository.findById(eventId)
+        return eventRepository.findEventById(eventId)
                 .orElseThrow(() -> new CustomException("There is no event with provided ID", HttpStatus.NOT_FOUND));
     }
 

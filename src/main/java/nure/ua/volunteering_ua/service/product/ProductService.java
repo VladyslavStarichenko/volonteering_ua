@@ -183,7 +183,7 @@ public class ProductService {
     }
 
     private Product getProductByIdInternal(Long id) {
-        return productRepository.findById(id)
+        return productRepository.findProductById(id)
                 .orElseThrow(
                         () -> new CustomException(
                                 "There is no product with specified id",

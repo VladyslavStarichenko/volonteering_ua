@@ -51,7 +51,7 @@ public class RequestController {
     }
 
     @ApiOperation(value = "Get all all requests")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN', 'ROLE_ORGANIZATION_ADMIN')")
     @GetMapping("/allRequests/{pageNumber}/{pageSize}")
     public ResponseEntity<AidRequestPageResponse> getAllRequests(
             @ApiParam(value = "Page number to show") @PathVariable int pageNumber,

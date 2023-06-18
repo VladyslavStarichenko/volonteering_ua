@@ -22,6 +22,9 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
   @Query(value = " FROM Organization o WHERE o.name = :name")
   Optional<Organization> getOrganizationByName(@Param("name") String name);
 
+  @Query(value = " FROM Organization o WHERE o.name = :name")
+  List<Optional<Organization>> getOrganizationByNameList(@Param("name") String name);
+
   @Query(value = "SELECT * FROM organization o WHERE o.volunteering_type = ?", nativeQuery = true)
   List<Organization> getAllByVolunteering_type(String volunteering_type);
 

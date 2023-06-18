@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EventRepository extends PagingAndSortingRepository<Event, Long> {
@@ -35,4 +36,7 @@ public interface EventRepository extends PagingAndSortingRepository<Event, Long>
     @Transactional
     @Query(value = "DELETE FROM participation WHERE customer_id = ? AND event_id = ?", nativeQuery = true)
     void unparticipate(Long customer_id, Long event_id);
+
+    @Query(value = "SELECT * FROM event e WHERE e.id=? LIMIT 1", nativeQuery = true)
+    Optional<Event> findEventById(Long id);
 }
