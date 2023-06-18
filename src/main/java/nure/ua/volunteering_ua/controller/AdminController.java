@@ -25,9 +25,7 @@ import java.util.UUID;
 @Api(value = "Admin operations")
 @RequestMapping(value = "/admin/")
 public class AdminController {
-
     private final UserServiceSCRT userServiceSCRT;
-
 
     @Autowired
     public AdminController(UserServiceSCRT userServiceSCRT) {
@@ -44,7 +42,6 @@ public class AdminController {
                 .map(response -> new ResponseEntity<>(response, HttpStatus.CREATED))
                 .orElseThrow(() -> new EmptyDataException("Invalid or empty input"));
     }
-
 
     @PutMapping("unblockUser/{userName}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -63,7 +60,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("User with name: " + userName + " was successfully blocked");
     }
-
 
     @ApiOperation(value = "Get all system users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

@@ -2,10 +2,10 @@ package nure.ua.volunteering_ua.service.product;
 
 import nure.ua.volunteering_ua.dto.product.*;
 import nure.ua.volunteering_ua.exeption.CustomException;
-import nure.ua.volunteering_ua.mapper.EventProductMapper;
-import nure.ua.volunteering_ua.mapper.EventProductPageMapper;
-import nure.ua.volunteering_ua.mapper.ProductMapper;
-import nure.ua.volunteering_ua.mapper.ProductPageMapper;
+import nure.ua.volunteering_ua.mapper.event.EventProductMapper;
+import nure.ua.volunteering_ua.mapper.event.EventProductPageMapper;
+import nure.ua.volunteering_ua.mapper.product.ProductMapper;
+import nure.ua.volunteering_ua.mapper.product.ProductPageMapper;
 import nure.ua.volunteering_ua.model.Event;
 import nure.ua.volunteering_ua.model.EventProduct;
 import nure.ua.volunteering_ua.model.Product;

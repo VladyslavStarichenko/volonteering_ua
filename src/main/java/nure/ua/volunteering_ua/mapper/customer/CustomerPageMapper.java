@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.customer;
 
 
 import nure.ua.volunteering_ua.dto.customer.CustomerPageResponse;

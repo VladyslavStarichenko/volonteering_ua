@@ -1,9 +1,7 @@
 package nure.ua.volunteering_ua.model.user;
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import nure.ua.volunteering_ua.dto.location.LocationDto;
 import nure.ua.volunteering_ua.model.Event;
 
@@ -11,7 +9,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "location")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Location {

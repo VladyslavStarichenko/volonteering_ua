@@ -4,14 +4,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import nure.ua.volunteering_ua.dto.event.EventCreateDto;
-import nure.ua.volunteering_ua.dto.event.EventGetDto;
-import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.dto.feedback.FeedBackCreateDto;
 import nure.ua.volunteering_ua.dto.feedback.FeedBackGetDto;
 import nure.ua.volunteering_ua.dto.feedback.FeedBackPageResponse;
-import nure.ua.volunteering_ua.dto.organization.OrganizationCreateDto;
-import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
 import nure.ua.volunteering_ua.service.feedback.FeedBackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @RestController
 @Api(value = "Operations with feedBacks")

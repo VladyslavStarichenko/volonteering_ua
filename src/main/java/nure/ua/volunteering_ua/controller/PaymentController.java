@@ -1,5 +1,4 @@
 package nure.ua.volunteering_ua.controller;
-import com.stripe.exception.StripeException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import nure.ua.volunteering_ua.dto.payment.*;
@@ -28,7 +27,7 @@ public class PaymentController {
     @GetMapping("balance/{organizationName}")
     public BalanceDto getBalance(
             @ApiParam(value = "Organization name to check transactions") @PathVariable String organizationName
-    ) throws StripeException {
+    ) {
         return stripeClient.getBalance(organizationName);
     }
 
@@ -38,7 +37,7 @@ public class PaymentController {
             @PathVariable String organizationName,
             @ApiParam(value = "Limit of transactions to retrieve")
             @PathVariable int limit
-    ) throws StripeException {
+    ) {
         return stripeClient.getTransactions(organizationName, limit);
     }
 
@@ -46,7 +45,7 @@ public class PaymentController {
     public ResponseEntity<PaymentMethodDto> getStripeKeys(
             @ApiParam(value = "Organization name to check transactions")
             @PathVariable String organizationName
-    ) throws StripeException {
+    ) {
         return new ResponseEntity<>(stripeClient.getStripeKey(organizationName),HttpStatus.OK);
     }
 

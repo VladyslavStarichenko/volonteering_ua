@@ -1,14 +1,19 @@
 package nure.ua.volunteering_ua.mapper.organization;
 
 import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
-import nure.ua.volunteering_ua.mapper.*;
+import nure.ua.volunteering_ua.mapper.customer.CustomerMapper;
+import nure.ua.volunteering_ua.mapper.event.EventMapper;
+import nure.ua.volunteering_ua.mapper.feedback.FeedBackMapper;
+import nure.ua.volunteering_ua.mapper.location.LocationMapper;
+import nure.ua.volunteering_ua.mapper.product.ProductMapper;
+import nure.ua.volunteering_ua.mapper.request.RequestMapper;
+import nure.ua.volunteering_ua.mapper.volunteer.VolunteeringMapper;
 import nure.ua.volunteering_ua.model.Feedback;
 import nure.ua.volunteering_ua.model.Statistic;
 import nure.ua.volunteering_ua.model.user.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,23 +21,24 @@ import java.util.stream.Stream;
 @Service
 public class OrganizationMapper implements Function<Organization, OrganizationGetDto> {
 
-    @Autowired
-    private EventMapper eventMapper;
-    @Autowired
-    private ProductMapper productMapper;
-    @Autowired
-    private FeedBackMapper feedBackMapper;
-    @Autowired
-    private CustomerMapper customerMapper;
-    @Autowired
-    private VolunteeringMapper volunteeringMapper;
-    @Autowired
-    private RequestMapper requestMapper;
-
-    @Autowired
-    private LocationMapper locationMapper;
-
+    private final EventMapper eventMapper;
+    private final ProductMapper productMapper;
+    private final FeedBackMapper feedBackMapper;
+    private final CustomerMapper customerMapper;
+    private final VolunteeringMapper volunteeringMapper;
+    private final RequestMapper requestMapper;
+    private final LocationMapper locationMapper;
     private final Statistic statistic = new Statistic();
+    @Autowired
+    public OrganizationMapper(EventMapper eventMapper, ProductMapper productMapper, FeedBackMapper feedBackMapper, CustomerMapper customerMapper, VolunteeringMapper volunteeringMapper, RequestMapper requestMapper, LocationMapper locationMapper) {
+        this.eventMapper = eventMapper;
+        this.productMapper = productMapper;
+        this.feedBackMapper = feedBackMapper;
+        this.customerMapper = customerMapper;
+        this.volunteeringMapper = volunteeringMapper;
+        this.requestMapper = requestMapper;
+        this.locationMapper = locationMapper;
+    }
 
     @Override
     public OrganizationGetDto apply(Organization organization) {

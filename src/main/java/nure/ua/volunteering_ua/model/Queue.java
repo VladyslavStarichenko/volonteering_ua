@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 
 public class Queue {
@@ -64,7 +63,7 @@ public class Queue {
         }
     }
 
-    public List<Aid_Request> updateQueueNumberAfterComplete(List<Aid_Request> requests, int queueNumber) {
+    public void updateQueueNumberAfterComplete(List<Aid_Request> requests, int queueNumber) {
         requests.sort(Comparator.comparingInt(Aid_Request::getQueueNumber));
         Aid_Request aid_request = requests.stream().filter(request -> request.getQueueNumber() == queueNumber)
                 .findAny()
@@ -74,14 +73,10 @@ public class Queue {
                                 HttpStatus.BAD_REQUEST)
                 );
         aid_request.setQueueNumber(-1);
-        if (requests.size() == 1) {
-            return requests;
-        } else {
+        if (requests.size() != 1) {
             requests.stream()
                     .filter(request -> request.getQueueNumber() > queueNumber)
                     .forEach(request -> request.setQueueNumber(request.getQueueNumber() - 1));
-
-            return requests;
         }
     }
 

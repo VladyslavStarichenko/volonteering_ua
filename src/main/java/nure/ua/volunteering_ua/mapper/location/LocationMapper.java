@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.location;
 
 import nure.ua.volunteering_ua.dto.location.LocationDto;
 import nure.ua.volunteering_ua.model.user.Location;

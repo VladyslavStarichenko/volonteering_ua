@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.feedback;
 
 import nure.ua.volunteering_ua.dto.feedback.FeedBackGetDto;
 import nure.ua.volunteering_ua.model.Feedback;

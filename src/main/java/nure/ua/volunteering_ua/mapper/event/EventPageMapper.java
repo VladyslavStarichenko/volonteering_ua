@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.event;
 
 import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.model.Event;

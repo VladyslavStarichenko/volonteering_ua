@@ -1,8 +1,6 @@
 package nure.ua.volunteering_ua.model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import nure.ua.volunteering_ua.model.user.Organization;
 
 import java.text.DecimalFormat;
@@ -20,16 +18,16 @@ public class Statistic {
 
     public Statistic(int requestsCount, double deliveredCount, double inVerificationRequestsCount,  double approvedRequestsCount) {
         this.requestsCount = requestsCount;
-        this.deliveredCount = String.valueOf(deliveredCount) + "%";
-        this.inVerificationRequestsCount = String.valueOf(inVerificationRequestsCount) + "%";
-        this.approvedRequestsCount = String.valueOf(approvedRequestsCount) + "%";
+        this.deliveredCount = deliveredCount + "%";
+        this.inVerificationRequestsCount = inVerificationRequestsCount + "%";
+        this.approvedRequestsCount = approvedRequestsCount + "%";
     }
 
     public Statistic() {
         this.requestsCount = 0;
-        this.deliveredCount = String.valueOf(0 ) + "%";
-        this.inVerificationRequestsCount = String.valueOf(0) + "%";
-        this.approvedRequestsCount = String.valueOf(0) + "%";
+        this.deliveredCount = 0 + "%";
+        this.inVerificationRequestsCount = 0 + "%";
+        this.approvedRequestsCount = 0 + "%";
     }
 
     public Statistic getStatistic(Organization organization) {

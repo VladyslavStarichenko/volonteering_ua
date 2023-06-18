@@ -1,6 +1,5 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.event;
 
-import nure.ua.volunteering_ua.dto.product.EventProductGetDto;
 import nure.ua.volunteering_ua.dto.product.EventProductPageResponse;
 import nure.ua.volunteering_ua.model.EventProduct;
 import org.springframework.beans.factory.annotation.Autowired;

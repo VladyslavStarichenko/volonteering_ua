@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.volunteer;
 
 import nure.ua.volunteering_ua.dto.volunteer.VolunteerPageResponse;
 import nure.ua.volunteering_ua.model.user.Volunteer;

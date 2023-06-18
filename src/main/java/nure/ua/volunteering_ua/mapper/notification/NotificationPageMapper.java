@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.notification;
 
 import nure.ua.volunteering_ua.dto.notification.NotificationPageResponse;
 import nure.ua.volunteering_ua.model.Notification;

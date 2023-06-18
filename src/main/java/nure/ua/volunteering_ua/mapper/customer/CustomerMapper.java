@@ -1,6 +1,7 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.customer;
 
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
+import nure.ua.volunteering_ua.mapper.request.RequestMapper;
 import nure.ua.volunteering_ua.model.user.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

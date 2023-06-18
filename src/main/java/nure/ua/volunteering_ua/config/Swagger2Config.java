@@ -12,8 +12,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,8 +22,8 @@ public class Swagger2Config {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiEndPointsInfo())
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
+                .securityContexts(Collections.singletonList(securityContext()))
+                .securitySchemes(List.of(apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors
                         .basePackage("nure.ua.volunteering_ua.controller"))
@@ -39,10 +37,10 @@ public class Swagger2Config {
                 "1.0",
                 "Free to use",
                 new springfox.documentation.service.Contact("Your Name",
-                        "git",
-                        "email"),
+                        "https://github.com/VladyslavStarichenko/volonteering_ua",
+                        "volunteering24ua@gmail.com"),
                 "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0.html",
+                "https://www.apache.org/licenses/LICENSE-2.0.html",
                 Collections.emptyList());
     }
 

@@ -3,8 +3,8 @@ package nure.ua.volunteering_ua.service.customer;
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.customer.CustomerPageResponse;
 import nure.ua.volunteering_ua.exeption.CustomException;
-import nure.ua.volunteering_ua.mapper.CustomerMapper;
-import nure.ua.volunteering_ua.mapper.CustomerPageMapper;
+import nure.ua.volunteering_ua.mapper.customer.CustomerMapper;
+import nure.ua.volunteering_ua.mapper.customer.CustomerPageMapper;
 import nure.ua.volunteering_ua.model.user.Customer;
 import nure.ua.volunteering_ua.repository.customer.CustomerRepository;
 import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
@@ -49,18 +49,12 @@ public class CustomerService {
                 .orElseThrow(() -> new CustomException("There is no customer account associated with the current user", HttpStatus.NOT_FOUND));
     }
 
-    public Customer getCustomerByIdInternal(Long id) {
-        return customerRepository
-                .findCustomerById(id)
-                .orElseThrow(() -> new CustomException("There is no customer account associated with the id provided", HttpStatus.NOT_FOUND));
-    }
     public CustomerGetDto getCustomerByName(String username) {
         return customerRepository
                 .findCustomerByUser_UserName(username)
                 .map(customerMapper)
                 .orElseThrow(() -> new CustomException("There is no customer account associated with the name provided", HttpStatus.NOT_FOUND));
     }
-
 
     public Customer getCustomerByNameInternal(String username) {
         return customerRepository
@@ -91,8 +85,4 @@ public class CustomerService {
         return customerPageMapper.apply(customerRepository.getAllByOrganization(pageable, organizationId));
     }
 
-    public CustomerPageResponse getAllParticipantsOfEvent(int pageNumber, int sizeOfPage, String sortBy, long eventID) {
-        Pageable pageable = PageRequest.of(pageNumber, sizeOfPage, Sort.by(Sort.Order.asc(sortBy)));
-        return customerPageMapper.apply(customerRepository.findAllParticipants(pageable, eventID));
-    }
 }

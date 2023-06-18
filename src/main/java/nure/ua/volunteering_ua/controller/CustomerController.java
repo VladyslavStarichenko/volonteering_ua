@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import nure.ua.volunteering_ua.dto.customer.CustomerGetDto;
 import nure.ua.volunteering_ua.dto.customer.CustomerPageResponse;
-import nure.ua.volunteering_ua.dto.event.EventPageResponse;
 import nure.ua.volunteering_ua.service.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

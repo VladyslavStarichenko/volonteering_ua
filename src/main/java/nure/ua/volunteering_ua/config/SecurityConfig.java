@@ -1,7 +1,5 @@
 package nure.ua.volunteering_ua.config;
 
-
-
 import nure.ua.volunteering_ua.service.security.jwt.JwtConfigurer;
 import nure.ua.volunteering_ua.service.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -58,13 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
-
-
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
@@ -74,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web){
         web.ignoring().antMatchers("/v2/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",

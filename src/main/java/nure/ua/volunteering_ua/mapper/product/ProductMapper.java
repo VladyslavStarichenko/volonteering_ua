@@ -1,4 +1,4 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.product;
 
 import nure.ua.volunteering_ua.dto.product.ProductGetDto;
 import nure.ua.volunteering_ua.model.Product;

@@ -1,6 +1,5 @@
 package nure.ua.volunteering_ua.dto.payment;
 
-import com.stripe.model.Money;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

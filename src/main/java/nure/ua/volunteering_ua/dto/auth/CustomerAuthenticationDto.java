@@ -1,11 +1,10 @@
 package nure.ua.volunteering_ua.dto.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import nure.ua.volunteering_ua.model.user.SocialCategory;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerAuthenticationDto extends AuthenticationDto {

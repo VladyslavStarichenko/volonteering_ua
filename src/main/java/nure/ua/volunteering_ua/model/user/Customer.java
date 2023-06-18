@@ -1,7 +1,6 @@
 package nure.ua.volunteering_ua.model.user;
 
 import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +11,9 @@ import nure.ua.volunteering_ua.model.Event;
 import nure.ua.volunteering_ua.model.Feedback;
 import nure.ua.volunteering_ua.model.Notification;
 import org.springframework.http.HttpStatus;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -69,7 +68,7 @@ public class Customer {
 
     public void subscribe(Organization organization) {
         if (this.subscriptions.stream()
-                .noneMatch(o -> o.getId() == organization.getId())) {
+                .noneMatch(o -> Objects.equals(o.getId(), organization.getId()))) {
             this.subscriptions.add(organization);
         } else {
             throw new CustomException("The customer is already subscribing an organization", HttpStatus.BAD_REQUEST);
@@ -78,7 +77,7 @@ public class Customer {
 
     public void unsubscribe(Organization organization) {
         if (this.subscriptions.stream()
-                .anyMatch(o -> o.getId() == organization.getId())) {
+                .anyMatch(o -> Objects.equals(o.getId(), organization.getId()))) {
             this.subscriptions.remove(organization);
         } else {
             throw new CustomException("The customer is not subscribing an organization", HttpStatus.BAD_REQUEST);

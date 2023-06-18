@@ -4,8 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import nure.ua.volunteering_ua.dto.request.AidRequestPageResponse;
-import nure.ua.volunteering_ua.dto.request.RequestGetDto;
 import nure.ua.volunteering_ua.dto.volunteer.VolunteerGetDto;
 import nure.ua.volunteering_ua.dto.volunteer.VolunteerPageResponse;
 import nure.ua.volunteering_ua.service.volunteer.VolunteerService;

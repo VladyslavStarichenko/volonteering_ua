@@ -1,6 +1,5 @@
-package nure.ua.volunteering_ua.mapper;
+package nure.ua.volunteering_ua.mapper.product;
 
-import nure.ua.volunteering_ua.dto.product.EventProductPageResponse;
 import nure.ua.volunteering_ua.dto.product.ProductPageResponse;
 import nure.ua.volunteering_ua.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;

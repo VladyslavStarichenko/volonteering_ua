@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import nure.ua.volunteering_ua.dto.organization.OrganizationCreateDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationGetDto;
 import nure.ua.volunteering_ua.dto.organization.OrganizationPageResponse;
-import nure.ua.volunteering_ua.dto.user.UserGetDto;
 import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.model.user.VolunteeringType;
 import nure.ua.volunteering_ua.service.organization.OrganizationService;

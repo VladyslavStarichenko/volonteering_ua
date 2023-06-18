@@ -12,8 +12,12 @@ import java.util.stream.Collectors;
 @Service
 public class OrganizationPageMapper implements Function<Page<Organization>, OrganizationPageResponse> {
 
+    private final OrganizationMapper organizationMapper;
+
     @Autowired
-    private OrganizationMapper organizationMapper;
+    public OrganizationPageMapper(OrganizationMapper organizationMapper) {
+        this.organizationMapper = organizationMapper;
+    }
 
     @Override
     public OrganizationPageResponse apply(Page<Organization> organizations) {
