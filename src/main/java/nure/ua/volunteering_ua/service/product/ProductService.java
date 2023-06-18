@@ -142,7 +142,7 @@ public class ProductService {
     public void deleteProductFromEvent(Long id) {
         EventProduct product = getProductEventByIdInternal(id);
         eventProductRepository.deleteById(product.getId());
-        productRepository.productUpdateAmount(product.getAmount(), product.getProduct().getId());
+        productRepository.productUpdateAmount(product.getAmount(), product.getAmount() + product.getProduct().getId());
     }
 
     public void deleteProductFromOrganization(Long id) {
