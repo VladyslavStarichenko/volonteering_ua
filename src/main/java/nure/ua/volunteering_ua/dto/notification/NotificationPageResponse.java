@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationPageResponse {
-    private List<NotificationDto> events;
+    private List<NotificationDto> notifications;
     private int pageNumber;
     private int pageSize;
     private long totalElements;
