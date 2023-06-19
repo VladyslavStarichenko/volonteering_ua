@@ -109,7 +109,7 @@ public class StatisticService {
         for (int i = 0; i < transactions.size(); i++) {
             TransactionDto transaction = transactions.get(i);
             checkTransaction(transaction);
-            sb.append("Transaction ID: ").append(transaction.getId()).append("\n");
+            sb.append("\nTransaction ID: ").append(transaction.getId()).append("\n");
             sb.append("Amount: ").append(transaction.getAmount()).append(" ")
                     .append(transaction.getCurrency()).append("\n");
             sb.append("Application: ").append(transaction.getApplication()).append("\n");

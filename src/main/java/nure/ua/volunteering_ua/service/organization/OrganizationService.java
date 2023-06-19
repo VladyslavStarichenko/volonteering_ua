@@ -178,21 +178,25 @@ public class OrganizationService {
         Optional<Organization> organization2Update = organizationRepository
                 .findAllByOrg_admin(userServiceSCRT.getCurrentLoggedInUser().getId());
         Organization organization = organization2Update.map(org -> {
-            Location location = locationRepository.getLocationsByAddress(organizationCreateDto.getLocation().getAddress())
+            Optional<Location> location = locationRepository.getLocationsByAddress(organizationCreateDto.getLocation().getAddress())
                     .stream()
                     .findFirst()
-                    .orElseThrow(() -> new CustomException("There is no location found", HttpStatus.BAD_REQUEST))
                     .orElseGet(() -> {
                         Location newLocation = new Location(organizationCreateDto.getLocation());
-                        locationRepository.save(newLocation);
-                        return newLocation;
+                        return Optional.of(locationRepository.save(newLocation));
                     });
-            org.setName(organizationCreateDto.getName());
-            org.setLocation(location);
-            org.setDescription(organizationCreateDto.getDescription());
-            org.setImageURL(organizationCreateDto.getImageURL());
-            org.setVolunteeringType(organizationCreateDto.getVolunteeringType());
-            return organizationRepository.save(org);
+            if(location.isPresent()){
+                org.setName(organizationCreateDto.getName());
+                org.setLocation(location.get());
+                org.setDescription(organizationCreateDto.getDescription());
+                org.setImageURL(organizationCreateDto.getImageURL());
+                org.setVolunteeringType(organizationCreateDto.getVolunteeringType());
+                return organizationRepository.save(org);
+            }
+            else {
+                throw new CustomException("Error updating location", HttpStatus.BAD_REQUEST);
+            }
+
         }).orElseThrow(() -> new CustomException("Error during updating the organization", HttpStatus.BAD_REQUEST));
         return organizationMapper.apply(organization);
     }
