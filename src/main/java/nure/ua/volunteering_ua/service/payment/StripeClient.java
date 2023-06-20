@@ -120,7 +120,7 @@ public class StripeClient {
         chargeParams.put("amount", (int) (chargeCustomerDto.getAmount() * 100));
         chargeParams.put("currency", chargeCustomerDto.getCurrency().toString());
         chargeParams.put("source", token);
-        chargeParams.put("receiptEmail", stripeCustomerEmail);
+        chargeParams.put("receipt_email", stripeCustomerEmail);
         chargeParams.put("application", "Volunteering_UA");
         chargeParams.put("description", "Donate to Volunteering_UA");
         return transactionMapper.apply(Charge.create(chargeParams));
