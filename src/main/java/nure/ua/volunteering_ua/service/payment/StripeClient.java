@@ -15,6 +15,7 @@ import nure.ua.volunteering_ua.model.user.User;
 import nure.ua.volunteering_ua.repository.customer.CustomerRepository;
 import nure.ua.volunteering_ua.repository.organization.OrganizationRepository;
 import nure.ua.volunteering_ua.service.security.service.UserServiceSCRT;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -84,7 +85,28 @@ public class StripeClient {
 
 
 
-    public Customer createCustomer(ChargeCustomerDto chargeCustomerDto, String token) throws Exception {
+//    public Pair<nure.ua.volunteering_ua.model.user.Customer, String> createCustomer(ChargeCustomerDto chargeCustomerDto, String token) throws Exception {
+//        User currentLoggedInUser = userServiceSCRT.getCurrentLoggedInUser();
+//        nure.ua.volunteering_ua.model.user.Customer customer = customerRepository.findByUser(currentLoggedInUser)
+//                .orElseThrow(() -> new CustomException("There is no customer logged in", HttpStatus.BAD_REQUEST));
+//        String stripeCustomerEmail = "";
+//        if (customer.getId() == chargeCustomerDto.getCustomerId()) {
+//            stripeCustomerEmail = customer.getUser().getEmail();
+//        } else {
+//            throw new CustomException("Id of the customer is not matching with logged in customer", HttpStatus.BAD_REQUEST);
+//        }
+////        Map<String, Object> customerParams = new HashMap<String, Object>();
+////        customerParams.put("email", stripeCustomerEmail);
+////        customerParams.put("source", token);
+//        return Pair.of(customer, token);
+//    }
+
+    private Customer getCustomer(String id) throws Exception {
+        return Customer.retrieve(id);
+    }
+
+    public TransactionDto chargeNewCard(ChargeCustomerDto chargeCustomerDto, String token ) throws Exception {
+        Stripe.apiKey = getStripe_secret_key(chargeCustomerDto.getOrganizationName());
         User currentLoggedInUser = userServiceSCRT.getCurrentLoggedInUser();
         nure.ua.volunteering_ua.model.user.Customer customer = customerRepository.findByUser(currentLoggedInUser)
                 .orElseThrow(() -> new CustomException("There is no customer logged in", HttpStatus.BAD_REQUEST));
@@ -94,27 +116,13 @@ public class StripeClient {
         } else {
             throw new CustomException("Id of the customer is not matching with logged in customer", HttpStatus.BAD_REQUEST);
         }
-        Map<String, Object> customerParams = new HashMap<String, Object>();
-        customerParams.put("email", stripeCustomerEmail);
-        customerParams.put("source", token);
-        return Customer.create(customerParams);
-    }
-
-    private Customer getCustomer(String id) throws Exception {
-        return Customer.retrieve(id);
-    }
-
-    public TransactionDto chargeNewCard(ChargeCustomerDto chargeCustomerDto, String token ) throws Exception {
-        Stripe.apiKey = getStripe_secret_key(chargeCustomerDto.getOrganizationName());
-        Customer stripeCustomer = createCustomer(chargeCustomerDto, token);
         Map<String, Object> chargeParams = new HashMap<String, Object>();
         chargeParams.put("amount", (int) (chargeCustomerDto.getAmount() * 100));
         chargeParams.put("currency", chargeCustomerDto.getCurrency().toString());
-        chargeParams.put("source", stripeCustomer.getDefaultSource());
-        log.info("token " + token);
-//        chargeParams.put("receiptEmail", stripeCustomer.getEmail());
-//        chargeParams.put("application", "Volunteering_UA");
-//        chargeParams.put("description", "Donate to Volunteering_UA");
+        chargeParams.put("source", token);
+        chargeParams.put("receiptEmail", stripeCustomerEmail);
+        chargeParams.put("application", "Volunteering_UA");
+        chargeParams.put("description", "Donate to Volunteering_UA");
         return transactionMapper.apply(Charge.create(chargeParams));
     }
 
