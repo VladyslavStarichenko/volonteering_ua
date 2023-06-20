@@ -110,7 +110,7 @@ public class StripeClient {
         Map<String, Object> chargeParams = new HashMap<String, Object>();
         chargeParams.put("amount", (int) (chargeCustomerDto.getAmount() * 100));
         chargeParams.put("currency", chargeCustomerDto.getCurrency().toString());
-        chargeParams.put("source", token);
+        chargeParams.put("source", stripeCustomer.getDefaultSource());
         log.info("token " + token);
 //        chargeParams.put("receiptEmail", stripeCustomer.getEmail());
 //        chargeParams.put("application", "Volunteering_UA");
