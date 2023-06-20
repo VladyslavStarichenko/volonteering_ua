@@ -36,6 +36,9 @@ public class StripeClient {
     private final CustomerRepository customerRepository;
     private final BalanceMapper balanceMapper;
 
+
+
+
     @Autowired
     public StripeClient(OrganizationRepository organizationRepository, TransactionMapper transactionMapper, UserServiceSCRT userServiceSCRT, CustomerRepository customerRepository, BalanceMapper balanceMapper) {
         this.organizationRepository = organizationRepository;
@@ -43,6 +46,8 @@ public class StripeClient {
         this.userServiceSCRT = userServiceSCRT;
         this.customerRepository = customerRepository;
         this.balanceMapper = balanceMapper;
+
+
     }
 
     public BalanceDto getBalance(String organizationName) {
@@ -75,7 +80,9 @@ public class StripeClient {
     }
 
 
-    public Customer createCustomer(ChargeCustomerDto chargeCustomerDto) throws Exception {
+
+
+    public Customer createCustomer(ChargeCustomerDto chargeCustomerDto, String token) throws Exception {
         User currentLoggedInUser = userServiceSCRT.getCurrentLoggedInUser();
         nure.ua.volunteering_ua.model.user.Customer customer = customerRepository.findByUser(currentLoggedInUser)
                 .orElseThrow(() -> new CustomException("There is no customer logged in", HttpStatus.BAD_REQUEST));
@@ -87,7 +94,7 @@ public class StripeClient {
         }
         Map<String, Object> customerParams = new HashMap<String, Object>();
         customerParams.put("email", stripeCustomerEmail);
-        customerParams.put("source", chargeCustomerDto.getToken());
+        customerParams.put("source", token);
         return Customer.create(customerParams);
     }
 
@@ -95,12 +102,13 @@ public class StripeClient {
         return Customer.retrieve(id);
     }
 
-    public TransactionDto chargeNewCard(ChargeCustomerDto chargeCustomerDto) throws Exception {
-        Customer stripeCustomer = createCustomer(chargeCustomerDto);
+    public TransactionDto chargeNewCard(ChargeCustomerDto chargeCustomerDto, String token ) throws Exception {
+        Stripe.apiKey = getStripe_secret_key(chargeCustomerDto.getOrganizationName());
+        Customer stripeCustomer = createCustomer(chargeCustomerDto, token);
         Map<String, Object> chargeParams = new HashMap<String, Object>();
         chargeParams.put("amount", (int) (chargeCustomerDto.getAmount() * 100));
         chargeParams.put("currency", chargeCustomerDto.getCurrency().toString());
-        chargeParams.put("source", chargeCustomerDto.getToken());
+        chargeParams.put("source", token);
         chargeParams.put("receiptEmail", stripeCustomer.getEmail());
         chargeParams.put("application", "Volunteering_UA");
         chargeParams.put("description", "Donate to Volunteering_UA");

@@ -9,9 +9,9 @@ import nure.ua.volunteering_ua.model.StripeCurrency;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChargeCustomerDto {
-    private String token;
     private double amount;
     private StripeCurrency currency;
-    private Long customerId;
+    private String organizationName;
+    private long customerId;
 
 }

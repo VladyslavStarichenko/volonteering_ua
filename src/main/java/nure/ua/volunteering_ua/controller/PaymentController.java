@@ -61,10 +61,11 @@ public class PaymentController {
 
     @PostMapping("/charge")
     public TransactionDto chargeCard(
+            @RequestHeader(value="token") String token,
             @ApiParam(value = "Payment details")
             @RequestBody ChargeCustomerDto chargeCustomerDto) {
         try {
-            return this.stripeClient.chargeNewCard(chargeCustomerDto);
+            return this.stripeClient.chargeNewCard(chargeCustomerDto, token);
         } catch (Exception e) {
             throw new CustomException("Payment was failed\n" + e.getMessage(),
                     HttpStatus.BAD_REQUEST);
