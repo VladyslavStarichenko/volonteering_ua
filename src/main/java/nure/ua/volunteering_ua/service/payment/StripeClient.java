@@ -55,8 +55,15 @@ public class StripeClient {
 
     public BalanceDto getBalance(String organizationName) {
         try {
+
             Stripe.apiKey = getStripe_secret_key(organizationName);
-            return balanceMapper.apply(Balance.retrieve());
+            if(Stripe.apiKey.isEmpty()){
+                return new BalanceDto();
+            }
+            else {
+                return balanceMapper.apply(Balance.retrieve());
+
+            }
 
         } catch (StripeException stripeException) {
             throw new CustomException("There is an error with retrieving balance of the organization", HttpStatus.BAD_REQUEST);
@@ -68,10 +75,16 @@ public class StripeClient {
             Map<String, Object> params = new HashMap<>();
             params.put("limit", limit); // Specify the number of transactions to retrieve
             Stripe.apiKey = getStripe_secret_key(organizationName);
-            return Charge.list(params).getData()
-                    .stream()
-                    .map(transactionMapper)
-                    .collect(Collectors.toList());
+            if(Stripe.apiKey.isEmpty()){
+                return new ArrayList<>();
+            }
+            else {
+                return Charge.list(params).getData()
+                        .stream()
+                        .map(transactionMapper)
+                        .collect(Collectors.toList());
+            }
+
 
         } catch (StripeException stripeException) {
             throw new CustomException("There is an error with retrieving transactions of the organization", HttpStatus.BAD_REQUEST);
@@ -140,6 +153,13 @@ public class StripeClient {
         Optional<Organization> organizationDb = organizationRepository.getOrganizationByName(organizationName);
         if (organizationDb.isPresent()) {
             Organization organization = organizationDb.get();
+            if(organization.getStripe_public_key() == null){
+                return new PaymentMethodDto(
+                        decrypt(""),
+                        decrypt(""),
+                        decrypt("")
+                );
+            }
             return new PaymentMethodDto(
                     decrypt(organization.getStripe_api_key()),
                     decrypt(organization.getStripe_public_key()),

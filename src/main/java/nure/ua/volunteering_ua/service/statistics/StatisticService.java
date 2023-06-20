@@ -37,31 +37,56 @@ public class StatisticService {
         OrganizationGetDto organization = organizationService.getOrganizationByName(organizationName);
         BalanceDto balance = stripeClient.getBalance(organizationName);
         List<TransactionDto> transactions = stripeClient.getTransactions(organizationName, limitForTransactions);
-        if(limitForTransactions > transactions.size()){
-            limitForTransactions = transactions.size();
+        if(!transactions.isEmpty()){
+            if(limitForTransactions > transactions.size()){
+                limitForTransactions = transactions.size();
+            }
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                Document document = new Document();
+                PdfWriter.getInstance(document, outputStream);
+                document.open();
+                Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD);
+                Paragraph titleParagraph = new Paragraph(organization.getName(), titleFont);
+                titleParagraph.setAlignment(Element.ALIGN_CENTER);
+                document.add(titleParagraph);
+                Image logoImage = Image.getInstance(organization.getImageURL());
+                logoImage.setAlignment(Element.ALIGN_RIGHT);
+                logoImage.scaleAbsolute(80, 80);
+                document.add(logoImage);
+                addSection(document, "Organization Statistics", formatStatistics(organization.getStatistic()));
+                addSection(document, "Organization Rating", String.valueOf(organization.getRating()));
+                addSection(document, "Balance", formatBalance(balance));
+                addSection(document, "Transactions", formatTransactions(transactions, limitForTransactions));
+                document.close();
+                return outputStream.toByteArray();
+            } catch (DocumentException | IOException e) {
+                e.printStackTrace();
+                throw new CustomException("There was an error during statistic document creation", HttpStatus.BAD_REQUEST);
+            }
         }
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            Document document = new Document();
-            PdfWriter.getInstance(document, outputStream);
-            document.open();
-            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD);
-            Paragraph titleParagraph = new Paragraph(organization.getName(), titleFont);
-            titleParagraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(titleParagraph);
-            Image logoImage = Image.getInstance(organization.getImageURL());
-            logoImage.setAlignment(Element.ALIGN_RIGHT);
-            logoImage.scaleAbsolute(80, 80);
-            document.add(logoImage);
-            addSection(document, "Organization Statistics", formatStatistics(organization.getStatistic()));
-            addSection(document, "Organization Rating", String.valueOf(organization.getRating()));
-            addSection(document, "Balance", formatBalance(balance));
-            addSection(document, "Transactions", formatTransactions(transactions, limitForTransactions));
-            document.close();
-            return outputStream.toByteArray();
-        } catch (DocumentException | IOException e) {
-            e.printStackTrace();
-            throw new CustomException("There was an error during statistic document creation", HttpStatus.BAD_REQUEST);
+        else {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                Document document = new Document();
+                PdfWriter.getInstance(document, outputStream);
+                document.open();
+                Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD);
+                Paragraph titleParagraph = new Paragraph(organization.getName(), titleFont);
+                titleParagraph.setAlignment(Element.ALIGN_CENTER);
+                document.add(titleParagraph);
+                Image logoImage = Image.getInstance(organization.getImageURL());
+                logoImage.setAlignment(Element.ALIGN_RIGHT);
+                logoImage.scaleAbsolute(80, 80);
+                document.add(logoImage);
+                addSection(document, "Organization Statistics", formatStatistics(organization.getStatistic()));
+                addSection(document, "Organization Rating", String.valueOf(organization.getRating()));
+                document.close();
+                return outputStream.toByteArray();
+            } catch (DocumentException | IOException e) {
+                e.printStackTrace();
+                throw new CustomException("There was an error during statistic document creation", HttpStatus.BAD_REQUEST);
+            }
         }
+
     }
 
     private void addSection(Document document, String sectionTitle, String sectionData) throws DocumentException {
@@ -104,6 +129,7 @@ public class StatisticService {
     }
 
     private String formatTransactions(List<TransactionDto> transactions, int limit) {
+
         StringBuilder sb = new StringBuilder("Amount of transactions: " + String.valueOf(limit) + "\n");
 
         for (int i = 0; i < transactions.size(); i++) {
