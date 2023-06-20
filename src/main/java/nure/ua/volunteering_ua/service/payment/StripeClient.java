@@ -5,6 +5,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Balance;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import lombok.extern.slf4j.Slf4j;
 import nure.ua.volunteering_ua.dto.payment.*;
 import nure.ua.volunteering_ua.exeption.CustomException;
 import nure.ua.volunteering_ua.mapper.payment.BalanceMapper;
@@ -25,6 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class StripeClient {
 
     private final OrganizationRepository organizationRepository;
@@ -109,6 +111,7 @@ public class StripeClient {
         chargeParams.put("amount", (int) (chargeCustomerDto.getAmount() * 100));
         chargeParams.put("currency", chargeCustomerDto.getCurrency().toString());
         chargeParams.put("source", token);
+        log.info("token " + token);
 //        chargeParams.put("receiptEmail", stripeCustomer.getEmail());
 //        chargeParams.put("application", "Volunteering_UA");
 //        chargeParams.put("description", "Donate to Volunteering_UA");
