@@ -11,6 +11,6 @@ public class NotificationDto {
 
     private String message;
     private String title;
-    private String organizationName;
+    private String userName;
 
 }

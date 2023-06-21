@@ -11,9 +11,10 @@ public class NotificationMapper implements Function<Notification, NotificationDt
     @Override
     public NotificationDto apply(Notification notification) {
         return new NotificationDto(
-                notification.getCustomer().getUser().getUserName(),
+
                 notification.getMessage(),
-                notification.getTitle()
+                notification.getTitle(),
+                notification.getCustomer().getUser().getUserName()
         );
     }
 }

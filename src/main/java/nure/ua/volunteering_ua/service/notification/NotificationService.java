@@ -86,22 +86,20 @@ public class NotificationService {
         User currentLoggedInUser = userServiceSCRT.getCurrentLoggedInUser();
         String role = currentLoggedInUser.getRole().getName();
         Organization organization = currentLoggedInUser.getOrganization();
-        if(role.equals("ROLE_ORGANIZATION_ADMIN")){
-            if(organization != null){
-                if(organization.getName().equals(organizationName)){
+        if (role.equals("ROLE_ORGANIZATION_ADMIN")) {
+            if (organization != null) {
+                if (organization.getName().equals(organizationName)) {
                     List<Customer> customers = organizationService.getOrganizationByNameInternalUsage(organizationName).getSubscribers();
                     customers
                             .forEach(customer -> {
                                 Notification notification = new Notification(customer, notificationCreateDto.getMessage(), notificationCreateDto.getTitle());
                                 notificationRepository.save(notification);
                             });
-                }
-                else {
+                } else {
                     throw new CustomException("You're not an admin of this organization", HttpStatus.BAD_REQUEST);
                 }
             }
-        }
-        else if(role.equals("ROLE_VOLUNTEER")){
+        } else if (role.equals("ROLE_VOLUNTEER")) {
             volunteerService.getAllVolunteersInternalUsage(organizationName)
                     .stream()
                     .filter(volunteer -> volunteer.getName().equals(currentLoggedInUser.getUserName()))
@@ -114,9 +112,8 @@ public class NotificationService {
                         });
                         throw new CustomException("You're not volunteering in that organization", HttpStatus.FORBIDDEN);
                     });
-        }
-        else {
-            throw new CustomException("You're not allowed to create notification",HttpStatus.FORBIDDEN);
+        } else {
+            throw new CustomException("You're not allowed to create notification", HttpStatus.FORBIDDEN);
         }
 
 
@@ -128,42 +125,43 @@ public class NotificationService {
         User currentLoggedInUser = userServiceSCRT.getCurrentLoggedInUser();
         Organization organization = currentLoggedInUser.getOrganization();
         String role = currentLoggedInUser.getRole().getName();
+//        subscriptions.stream()
+//                .filter(org -> org.getName().equals(notificationDto.getOrganizationName()))
+//                .findAny()
+//                .ifPresentOrElse(
+//                        org -> {
 
-        subscriptions.stream()
+        List<Organization> first = subscriptions.stream()
                 .filter(org -> org.getName().equals(notificationDto.getOrganizationName()))
-                .findAny()
-                .ifPresentOrElse(
-                        org -> {
-                            if (role.equals("ROLE_ORGANIZATION_ADMIN")) {
-                                if (organization != null) {
-                                    if (organization.getName().equals(notificationDto.getOrganizationName())) {
-                                        Notification notification = new Notification(customer, notificationDto.getMessage(), notificationDto.getTitle());
-                                        notificationRepository.save(notification);
-                                    } else {
-                                        throw new CustomException("You're not an admin of this organization", HttpStatus.BAD_REQUEST);
-                                    }
-                                }
-                            } else if (role.equals("ROLE_VOLUNTEER")) {
-                                volunteerService.getAllVolunteersInternalUsage(notificationDto.getOrganizationName())
-                                        .stream()
-                                        .filter(volunteer -> volunteer.getName().equals(currentLoggedInUser.getUserName()))
-                                        .findAny()
-                                        .orElseGet(() -> {
-                                            Notification notification = new Notification(customer, notificationDto.getMessage(), notificationDto.getTitle());
-                                            notificationRepository.save(notification);
-                                            throw new CustomException("You're not volunteering in that organization", HttpStatus.FORBIDDEN);
-                                        });
-                            } else {
-                                throw new CustomException("You're not allowed to create notification", HttpStatus.FORBIDDEN);
-                            }
-                        },
-                        () -> {
-                            throw new CustomException("This user is a subscriber of organization", HttpStatus.BAD_REQUEST);
-                        }
-                );
+                .collect(Collectors.toList());
 
+        if(!first.isEmpty()){
+            if (role.equals("ROLE_ORGANIZATION_ADMIN")) {
+                if (organization != null) {
+                    if (organization.getName().equals(notificationDto.getOrganizationName())) {
+                        Notification notification = new Notification(customer, notificationDto.getMessage(), notificationDto.getTitle());
+                        notificationRepository.save(notification);
+                    } else {
+                        throw new CustomException("You're not an admin of this organization", HttpStatus.BAD_REQUEST);
+                    }
+                }
+            } else if (role.equals("ROLE_VOLUNTEER")) {
+                volunteerService.getAllVolunteersInternalUsage(notificationDto.getOrganizationName())
+                        .stream()
+                        .filter(volunteer -> volunteer.getName().equals(currentLoggedInUser.getUserName()))
+                        .findAny()
+                        .orElseGet(() -> {
+                            Notification notification = new Notification(customer, notificationDto.getMessage(), notificationDto.getTitle());
+                            notificationRepository.save(notification);
+                            throw new CustomException("You're not volunteering in that organization", HttpStatus.FORBIDDEN);
+                        });
+            } else {
+                throw new CustomException("You're not allowed to create notification", HttpStatus.FORBIDDEN);
+            }
 
+        }else {
+            throw new CustomException("User is not a subscriber of organization", HttpStatus.NOT_FOUND);
+        }
+        }
 
-
-    }
 }
